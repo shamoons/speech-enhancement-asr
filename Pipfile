@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "<2.0.0"
+autopep8 = "*"
+
+[packages]
+numpy = "*"
+matplotlib = "*"
+scipy = "*"
+soundfile = "*"
+urllib3 = "==1.19.1"
+pocketsphinx = {git = "https://github.com/bambocher/pocketsphinx-python",ref = "v0.1.15"}
+
+[requires]
+python_version = "3.6"
