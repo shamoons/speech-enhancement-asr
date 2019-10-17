@@ -13,6 +13,7 @@ matplotlib = "*"
 scipy = "*"
 soundfile = "*"
 pocketsphinx = {git = "https://github.com/bambocher/pocketsphinx-python",ref = "v0.1.15"}
+deepspeech = "*"
 
 [requires]
 python_version = "3.6"
