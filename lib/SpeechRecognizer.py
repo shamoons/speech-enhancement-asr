@@ -1,6 +1,9 @@
 from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 from os import path
+from jiwer import wer
+
+import re
 
 
 class SpeechRecognizer:
@@ -15,13 +18,24 @@ class SpeechRecognizer:
         config.set_string('-hmm', path.join(model, 'en-us'))
         config.set_string('-lm', path.join(model, 'en-us.lm.bin'))
         config.set_string('-dict', path.join(model, 'cmudict-en-us.dict'))
+        config.set_string('-logfn', '/dev/null')
         decoder = Decoder(config)
         decoder.start_utt()
 
+        # How many frames do we want to evaluate? Currently 10ms
+        sample_frames = int(self.SOUND_FILE.samplerate / 10)
+
         while self.SOUND_FILE.tell() < len(self.SOUND_FILE):
-            print(self.SOUND_FILE.tell(), len(self.SOUND_FILE))
-            buf = self.SOUND_FILE.buffer_read(1024, dtype='float32')
-            decoder.process_raw(buf, True, False)
+            audio_data = self.SOUND_FILE.read(sample_frames, dtype='int16')
+            decoder.process_raw(audio_data.tobytes(), True, False)
 
         decoder.end_utt()
-        print('Best hypothesis segments: ', [seg.word for seg in decoder.seg()])
+        words = []
+        for seg in decoder.seg():
+            word = re.sub(r'\([^)]*\)', '', seg.word)
+
+            words.append(word)
+        return words
+
+    def word_error_rate(self, ground_truth, hypothesis):
+        return wer(ground_truth, hypothesis)

@@ -1,2 +1,5 @@
 data/LibriSpeech/**/*.flac
 .vscode/
+__pycache__
+*.pyc
+data/models/

@@ -11,9 +11,10 @@ autopep8 = "*"
 numpy = "*"
 matplotlib = "*"
 scipy = "*"
-soundfile = "*"
+soundfile = "==0.10.2"
 pocketsphinx = {git = "https://github.com/bambocher/pocketsphinx-python",ref = "v0.1.15"}
-deepspeech = "*"
+deepspeech = "==0.5.1"
+jiwer = "*"
 
 [requires]
 python_version = "3.6"
