@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4eaa9864363d86d2e5cc02fdfcc9a733444c333de537796dd9dabc3b68f2a487"
+            "sha256": "7eb0d249087f6bfeb99dd99ae50622c4fa65f643be62651060b2772bbce869d3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -170,6 +170,14 @@
                 "sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"
             ],
             "version": "==2.19"
+        },
+        "pydash": {
+            "hashes": [
+                "sha256:bc6fe03097634f5cf49f271ff6bb808a53a9950aa8ad24d93b6f4baaf6547b11",
+                "sha256:ec151c9877f9c095e4548a97fa12164900ee2f5c271d3d19a966702ce6def9ca"
+            ],
+            "index": "pypi",
+            "version": "==4.7.5"
         },
         "pyparsing": {
             "hashes": [

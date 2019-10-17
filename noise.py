@@ -12,7 +12,8 @@ clean_path = 'data/LibriSpeech/dev-clean/'
 for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
     print('Processing: ', filepath)
 
-    target_snrs = np.arange(-5, 11)     # Chosen from https://arxiv.org/pdf/1802.00604.pdf
+    # target_snrs = np.arange(-5, 11)     # Chosen from https://arxiv.org/pdf/1802.00604.pdf
+    target_snrs = [5]
 
     sound_file = SoundFile(filepath)
     noise_maker = NoiseMaker(sound_file=sound_file)

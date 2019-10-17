@@ -15,6 +15,7 @@ soundfile = "==0.10.2"
 pocketsphinx = {git = "https://github.com/bambocher/pocketsphinx-python",ref = "v0.1.15"}
 deepspeech = "==0.5.1"
 jiwer = "*"
+pydash = "*"
 
 [requires]
 python_version = "3.6"

@@ -2,7 +2,8 @@ from pocketsphinx.pocketsphinx import *
 from sphinxbase.sphinxbase import *
 from os import path
 from jiwer import wer
-
+import pydash
+import deepspeech
 import re
 
 
@@ -26,16 +27,22 @@ class SpeechRecognizer:
         sample_frames = int(self.SOUND_FILE.samplerate / 10)
 
         while self.SOUND_FILE.tell() < len(self.SOUND_FILE):
-            audio_data = self.SOUND_FILE.read(sample_frames, dtype='int16')
-            decoder.process_raw(audio_data.tobytes(), True, False)
+            audio_data = self.SOUND_FILE.read(sample_frames, dtype='int16').tobytes()
+            decoder.process_raw(audio_data, True, False)
 
         decoder.end_utt()
-        words = []
-        for seg in decoder.seg():
-            word = re.sub(r'\([^)]*\)', '', seg.word)
+        words = pydash.filter_(decoder.seg(), lambda seg: '<' not in seg.word)
+        words = pydash.map_(words, lambda seg: re.sub(r'\([^)]*\)', '', seg.word))
 
-            words.append(word)
         return words
+
+    def deepspeech(self, model='/c/Users/Shamoon/Sites/artificial-intelligence/speech-enhancement-asr/data/models/deepspeech-0.5.1-models/lm.binary', alphabet='/c/Users/Shamoon/Sites/artificial-intelligence/speech-enhancement-asr/data/models/deepspeech-0.5.1-models/alphabet.txt', beam_width=500):
+        ds = deepspeech.Model(aModelPath=model, aAlphabetConfigPath=alphabet,
+                              aBeamWidth=beam_width, aNCep=1, aNContext=1)
+        # ds = deepspeech.Model(aModelPath=model, aAlphabetConfigPath=alphabet, beam_width)
+        audio_data = self.SOUND_FILE.read(dtype='int16').tobytes()
+        words = ds.stt(audio_data)
+        print(words)
 
     def word_error_rate(self, ground_truth, hypothesis):
         return wer(ground_truth, hypothesis)
