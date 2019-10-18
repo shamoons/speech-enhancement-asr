@@ -16,6 +16,7 @@ pocketsphinx = {git = "https://github.com/bambocher/pocketsphinx-python",ref = "
 deepspeech = "==0.5.1"
 jiwer = "*"
 pydash = "*"
+tensorflow = "==1.13.1"
 
 [requires]
 python_version = "3.6"
