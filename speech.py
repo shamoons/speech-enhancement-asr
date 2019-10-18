@@ -1,29 +1,46 @@
-from os import environ, path
+from lib import SpeechRecognizer, AudioFile, SpeechEnhance
+from soundfile import SoundFile
 
-from pocketsphinx.pocketsphinx import *
-from sphinxbase.sphinxbase import *
+audio_file = AudioFile()
+iterations = 0
 
-MODELDIR = "/home/shamoon/.local/share/virtualenvs/speech-enhancement-asr-a7TdkoLa/lib/python3.6/site-packages/pocketsphinx/model"
-DATADIR = "/home/shamoon/.local/share/virtualenvs/speech-enhancement-asr-a7TdkoLa/lib/python3.6/site-packages/pocketsphinx/data"
+speech_recognizer = SpeechRecognizer()
+ground_truths = []
+hypotheses = []
 
-# Create a decoder with certain model
-config = Decoder.default_config()
-config.set_string('-hmm', path.join(MODELDIR, 'en-us'))
-config.set_string('-lm', path.join(MODELDIR, 'en-us.lm.bin'))
-config.set_string('-dict', path.join(MODELDIR, 'cmudict-en-us.dict'))
-decoder = Decoder(config)
+while iterations < 10:
+    print(f'Doing Iteration {iterations}')
+    loaded_audio = audio_file.load_random()
+    speech_recognizer.set_sound_file(loaded_audio['clean_sound_file'])
+    # speech_recognizer.set_sound_file(loaded_audio['dev-noise-gaussian-5'])
+    # enhanced_speech_array = SpeechEnhance(loaded_audio['dev-noise-gaussian-5']).wiener()
+    # speech_recognizer.set_audio_array(enhanced_speech_array)
+    # speech_recognizer.set_sound_file(speech_enhance.wiener())
+    # speech_recognizer.set_sound_file(loaded_audio['clean_sound_file'])
 
-# Decode streaming data.
-decoder = Decoder(config)
-decoder.start_utt()
-stream = open('84-121123-0000.wav', 'rb')
-# stream = open('data/LibriSpeech/dev-clean/84/121123/84-121123-0001.flac', 'rb')
-# stream = open(path.join(DATADIR, 'goforward.raw'), 'rb')
-while True:
-    buf = stream.read(1024)
-    if buf:
-        decoder.process_raw(buf, True, False)
-    else:
-        break
-decoder.end_utt()
-print('Best hypothesis segments: ', [seg.word for seg in decoder.seg()])
+    result = speech_recognizer.deepspeech()
+    # result = speech_recognizer.pocketsphinx()
+
+    print('\tActual: ', loaded_audio['transcript_text'])
+    print('\tPredicted: ', ' '.join(result))
+
+    ground_truths.append(loaded_audio['transcript_text'])
+    hypotheses.append(' '.join(result))
+
+    iterations += 1
+word_error_rate = speech_recognizer.word_error_rate(ground_truths, hypotheses)
+print(word_error_rate)
+
+
+quit()
+
+file_path = 'data/LibriSpeech/dev-clean/84/121123/84-121123-0005.flac'
+
+sound_file = SoundFile(file_path)
+speech_recognizer = SpeechRecognizer(sound_file)
+words = speech_recognizer.pocketsphinx()
+# words = speech_recognizer.deepspeech()
+print(words)
+ground_truth = "D'AVRIGNY UNABLE TO BEAR THE SIGHT OF THIS TOUCHING EMOTION TURNED AWAY AND VILLEFORT WITHOUT SEEKING ANY FURTHER EXPLANATION AND ATTRACTED TOWARDS HIM BY THE IRRESISTIBLE MAGNETISM WHICH DRAWS US TOWARDS THOSE WHO HAVE LOVED THE PEOPLE FOR WHOM WE MOURN EXTENDED HIS HAND TOWARDS THE YOUNG MAN"
+word_error_rate = speech_recognizer.word_error_rate(ground_truth, ' '.join(words))
+print(word_error_rate)
