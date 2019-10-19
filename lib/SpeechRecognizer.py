@@ -30,8 +30,8 @@ class SpeechRecognizer:
     def set_samplerate(self, samplerate):
         self.samplerate = samplerate
 
-    def initialize_deepspeech(self):
-        return
+    def initialize_deepspeech(self, model='data/models/deepspeech-0.5.1-models/output_graph.pb', alphabet='data/models/deepspeech-0.5.1-models/alphabet.txt', beam_width=500):
+        self.deepspeech_model = deepspeech.Model(model, 26, 9, alphabet, beam_width)
 
     def initialize_pocketsphinx(self):
         config = Decoder.default_config()
@@ -52,10 +52,6 @@ class SpeechRecognizer:
             current_pos += sample_frames
             self.pocketsphinx_decoder.process_raw(audio_data, True, False)
 
-        # while self.SOUND_FILE.tell() < len(self.SOUND_FILE):
-        #     audio_data = self.SOUND_FILE.read(sample_frames, dtype='int16').tobytes()
-        #     self.pocketsphinx_decoder.process_raw(audio_data, True, False)
-
         self.pocketsphinx_decoder.end_utt()
         words = pydash.filter_(self.pocketsphinx_decoder.seg(),
                                lambda seg: '<' not in seg.word and '++' not in seg.word and '[' not in seg.word)
@@ -63,13 +59,10 @@ class SpeechRecognizer:
 
         return words
 
-    def deepspeech(self, model='data/models/deepspeech-0.5.1-models/output_graph.pb', alphabet='data/models/deepspeech-0.5.1-models/alphabet.txt', beam_width=500):
-        ds = deepspeech.Model(aModelPath=model, aAlphabetConfigPath=alphabet,
-                              aBeamWidth=beam_width, aNCep=1, aNContext=1, aSampleRate=1)
-        # ds = deepspeech.Model(aModelPath=model, aAlphabetConfigPath=alphabet, beam_width)
-        audio_data = self.SOUND_FILE.read(dtype='int16').tobytes()
-        words = ds.stt(audio_data)
-        print(words)
+    def deepspeech(self):
+        audio_data = self.audio_array
+        words = self.deepspeech_model.stt(audio_data, self.samplerate)
+        return words.split(' ')
 
     def word_error_rate(self, ground_truth, hypothesis):
         return wer(ground_truth, hypothesis)
