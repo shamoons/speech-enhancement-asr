@@ -17,6 +17,7 @@ deepspeech = "==0.5.1"
 jiwer = "*"
 pydash = "*"
 tensorflow = "==1.13.1"
+pandas = "*"
 
 [requires]
 python_version = "3.6"
