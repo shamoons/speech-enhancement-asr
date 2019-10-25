@@ -1,5 +1,6 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
 from soundfile import SoundFile
+import pandas as pd
 
 audio_file = AudioFile()
 iterations = 0
@@ -8,39 +9,55 @@ speech_recognizer = SpeechRecognizer()
 ground_truths = []
 hypotheses = []
 
-while iterations < 10:
+output_df = pd.DataFrame(columns=['book_id', 'chapter_id', 'transcript_id',
+                                  'transcript_text', 'clean_predicted_text', 'clean_wer'])
+
+while iterations < 250:
     print(f'Doing Iteration {iterations}')
     loaded_audio = audio_file.load_random()
+
+    # wiener_enhanced = SpeechEnhance(loaded_audio['dev-noise-gaussian-5'].audio_array).wiener()
+
     speech_recognizer.set_sound_file(loaded_audio['clean_sound_file'])
     # speech_recognizer.set_sound_file(loaded_audio['dev-noise-gaussian-5'])
-    # enhanced_speech_array = SpeechEnhance(loaded_audio['dev-noise-gaussian-5']).wiener()
-    # speech_recognizer.set_audio_array(enhanced_speech_array)
-    # speech_recognizer.set_sound_file(speech_enhance.wiener())
-    # speech_recognizer.set_sound_file(loaded_audio['clean_sound_file'])
+    # enhanced_speech_array = speech_enhance.wiener(loaded_audio['dev-noise-gaussian-5'])
+    # speech_recognizer.set_audio_array(wiener_enhanced)
 
-    result = speech_recognizer.deepspeech()
     # result = speech_recognizer.pocketsphinx()
+    clean_result = speech_recognizer.deepspeech()
+    clean_predicted_text = ' '.join(clean_result).upper()
 
-    print('\tActual: ', loaded_audio['transcript_text'])
-    print('\tPredicted: ', ' '.join(result))
+    clean_word_error_rate = speech_recognizer.word_error_rate(loaded_audio['transcript_text'], clean_predicted_text)
 
-    ground_truths.append(loaded_audio['transcript_text'])
-    hypotheses.append(' '.join(result))
+    # speech_recognizer.set_sound_file(loaded_audio['dev-noise-gaussian-5'])
+    # result = speech_recognizer.deepspeech()
+    # predicted_text = ' '.join(result).upper()
+
+    # word_error_rate = speech_recognizer.word_error_rate(loaded_audio['transcript_text'], predicted_text)
+
+
+    # print('\tActual: ', loaded_audio['transcript_text'])
+    # print('\tPredicted: ', predicted_text)
+    # print('\tWER: ', clean_word_error_rate)
+    # print('\t5 WER: ', word_error_rate)
+
+    output_df = output_df.append(
+        {
+            'book_id': loaded_audio['book_id'],
+            'chapter_id': loaded_audio['chapter_id'],
+            'transcript_id': loaded_audio['transcript_id'],
+            'transcript_text': loaded_audio['transcript_text'],
+            'clean_predicted_text': clean_predicted_text,
+            'clean_wer': clean_word_error_rate,
+#            '5-snr-wer': word_error_rate
+        }, ignore_index=True)
+
+    if iterations % 10 == 0:
+        print('Checkpoint saving')
+        output_df.to_csv('output_df.csv')
 
     iterations += 1
-word_error_rate = speech_recognizer.word_error_rate(ground_truths, hypotheses)
-print(word_error_rate)
-
-
-quit()
-
-file_path = 'data/LibriSpeech/dev-clean/84/121123/84-121123-0005.flac'
-
-sound_file = SoundFile(file_path)
-speech_recognizer = SpeechRecognizer(sound_file)
-words = speech_recognizer.pocketsphinx()
-# words = speech_recognizer.deepspeech()
-print(words)
-ground_truth = "D'AVRIGNY UNABLE TO BEAR THE SIGHT OF THIS TOUCHING EMOTION TURNED AWAY AND VILLEFORT WITHOUT SEEKING ANY FURTHER EXPLANATION AND ATTRACTED TOWARDS HIM BY THE IRRESISTIBLE MAGNETISM WHICH DRAWS US TOWARDS THOSE WHO HAVE LOVED THE PEOPLE FOR WHOM WE MOURN EXTENDED HIS HAND TOWARDS THE YOUNG MAN"
-word_error_rate = speech_recognizer.word_error_rate(ground_truth, ' '.join(words))
-print(word_error_rate)
+# word_error_rate = speech_recognizer.word_error_rate(ground_truths, hypotheses)
+# print(word_error_rate)
+print(output_df)
+output_df.to_csv('output_df.csv')
