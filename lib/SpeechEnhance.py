@@ -1,5 +1,5 @@
 from scipy.signal import wiener
-from .segan.model import SEGAN
+# from .segan.model import SEGAN
 
 
 class SpeechEnhance:
@@ -11,5 +11,5 @@ class SpeechEnhance:
         return wiener(self.audio_signal)
 
     def segan(self):
-        print(SEGAN)
+        print('hi')
         return

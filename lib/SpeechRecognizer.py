@@ -65,4 +65,21 @@ class SpeechRecognizer:
         return words.split(' ')
 
     def word_error_rate(self, ground_truth, hypothesis):
-        return wer(ground_truth, hypothesis)
+        """Return the Levenshtein edit distance between two strings *a* and *b*."""
+        if ground_truth == hypothesis:
+            return 0
+        if len(ground_truth) < len(hypothesis):
+            ground_truth, hypothesis = hypothesis, ground_truth
+        if not ground_truth:
+            return len(hypothesis)
+        previous_row = range(len(hypothesis) + 1)
+        for i, column1 in enumerate(ground_truth):
+            current_row = [i + 1]
+            for j, column2 in enumerate(hypothesis):
+                insertions = previous_row[j + 1] + 1
+                deletions = current_row[j] + 1
+                substitutions = previous_row[j] + (column1 != column2)
+                current_row.append(min(insertions, deletions, substitutions))
+            previous_row = current_row
+        levenshtein_distance = previous_row[-1]
+        return levenshtein_distance / len(hypothesis)
