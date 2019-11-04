@@ -25,7 +25,7 @@ class AudioFile:
                 return True
             return False
 
-        transcript_lines = open(os.path.join(self.DATA_PATH, 'dev-clean', book_id,
+        transcript_lines = open(os.path.join(self.DATA_PATH, 'test-clean', book_id,
                                              chapter_id, f'{book_id}-{chapter_id}.trans.txt'), 'r').readlines()
         transcript_line = pydash.find(transcript_lines, check_transcript_id)
         transcript_text = transcript_line.split(' ', 1)[1].strip()
@@ -35,11 +35,11 @@ class AudioFile:
             'book_id': book_id,
             'chapter_id': chapter_id,
             'transcript_id': transcript_id,
-            'clean_sound_file': self.load_sound_file('dev-clean', book_id, chapter_id, transcript_id),
-            #'dev-noise-gaussian-5': self.load_sound_file('dev-noise-gaussian-5', book_id, chapter_id, transcript_id)
+            'clean_sound_file': self.load_sound_file('test-clean', book_id, chapter_id, transcript_id),
+            # 'dev-noise-gaussian-5': self.load_sound_file('dev-noise-gaussian-5', book_id, chapter_id, transcript_id)
         }
 
-    def load_random(self, subset='dev-clean'):
+    def load_random(self, subset='test-clean'):
         book_ids = os.listdir(os.path.join(self.DATA_PATH, subset))
         book_id = pydash.sample(book_ids)
         clean_path = os.path.join(self.DATA_PATH, subset, book_id)

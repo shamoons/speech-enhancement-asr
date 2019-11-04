@@ -10,7 +10,7 @@ ground_truths = []
 hypotheses = []
 
 output_df = pd.DataFrame(columns=['book_id', 'chapter_id', 'transcript_id',
-                                  'transcript_text', 'clean_predicted_text', 'clean_wer'])
+                                  'transcript_text', 'clean_predicted_text', 'clean_word_distance', 'word_length'])
 
 while iterations < 250:
     print(f'Doing Iteration {iterations}')
@@ -27,7 +27,7 @@ while iterations < 250:
     clean_result = speech_recognizer.deepspeech()
     clean_predicted_text = ' '.join(clean_result).upper()
 
-    clean_word_error_rate = speech_recognizer.word_error_rate(loaded_audio['transcript_text'], clean_predicted_text)
+    clean_word_distance = speech_recognizer.word_distance(loaded_audio['transcript_text'], clean_predicted_text)
 
     # speech_recognizer.set_sound_file(loaded_audio['dev-noise-gaussian-5'])
     # result = speech_recognizer.deepspeech()
@@ -35,10 +35,9 @@ while iterations < 250:
 
     # word_error_rate = speech_recognizer.word_error_rate(loaded_audio['transcript_text'], predicted_text)
 
-
     # print('\tActual: ', loaded_audio['transcript_text'])
     # print('\tPredicted: ', predicted_text)
-    # print('\tWER: ', clean_word_error_rate)
+    # print('\tWER: ', clean_word_distance)
     # print('\t5 WER: ', word_error_rate)
 
     output_df = output_df.append(
@@ -48,8 +47,9 @@ while iterations < 250:
             'transcript_id': loaded_audio['transcript_id'],
             'transcript_text': loaded_audio['transcript_text'],
             'clean_predicted_text': clean_predicted_text,
-            'clean_wer': clean_word_error_rate,
-#            '5-snr-wer': word_error_rate
+            'clean_word_distance': clean_word_distance,
+            'word_length': len(loaded_audio['transcript_text'].split(' '))
+            #            '5-snr-wer': word_error_rate
         }, ignore_index=True)
 
     if iterations % 10 == 0:

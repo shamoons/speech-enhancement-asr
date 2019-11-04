@@ -28,8 +28,9 @@ class SpeechRecognizer:
     def set_samplerate(self, samplerate):
         self.samplerate = samplerate
 
-    def initialize_deepspeech(self, model='data/models/deepspeech-0.5.1-models/output_graph.pb', alphabet='data/models/deepspeech-0.5.1-models/alphabet.txt', beam_width=500):
+    def initialize_deepspeech(self, model='data/models/deepspeech-0.5.1-models/output_graph.pbmm', alphabet='data/models/deepspeech-0.5.1-models/alphabet.txt', lm='data/models/deepspeech-0.5.1-models/lm.binary', trie='/data/models/deepspeech-0.5.1-models/trie', beam_width=500):
         self.deepspeech_model = deepspeech.Model(model, 26, 9, alphabet, beam_width)
+        self.deepspeech_model.enableDecoderWithLM(alphabet, lm, trie, 0.75, 1.85)
 
     def initialize_pocketsphinx(self):
         config = Decoder.default_config()
@@ -62,7 +63,7 @@ class SpeechRecognizer:
         words = self.deepspeech_model.stt(audio_data, self.samplerate)
         return words.split(' ')
 
-    def word_error_rate(self, ground_truth, hypothesis):
+    def word_distance(self, ground_truth, hypothesis):
         ground_truth_words = ground_truth.split(' ')
         hypothesis_words = hypothesis.split(' ')
         levenshtein_word_distance = editdistance.eval(ground_truth_words, hypothesis_words)
@@ -84,5 +85,5 @@ class SpeechRecognizer:
         #         current_row.append(min(insertions, deletions, substitutions))
         #     previous_row = current_row
         # levenshtein_distance = previous_row[-1]
-        wer = levenshtein_word_distance / len(ground_truth_words)
-        return wer
+        # wer = levenshtein_word_distance / len(ground_truth_words)
+        return levenshtein_word_distance

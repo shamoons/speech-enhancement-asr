@@ -7,13 +7,13 @@ from lib import NoiseMaker
 import numpy as np
 import math
 
-clean_path = 'data/LibriSpeech/dev-clean/'
+clean_path = 'data/LibriSpeech/test-clean/'
 
 
 def create_gaussian(noise_maker, filepath, target_snr):
-    gaussian_path = 'dev-noise-gaussian-' + str(target_snr)
+    gaussian_path = 'test-noise-gaussian-' + str(target_snr)
     path, file = os.path.split(filepath)
-    noisy_path = path.replace('dev-clean', gaussian_path)
+    noisy_path = path.replace('test-clean', gaussian_path)
     if not os.path.exists(noisy_path):
         os.makedirs(noisy_path)
 
@@ -26,9 +26,9 @@ def create_gaussian(noise_maker, filepath, target_snr):
 
 
 def create_whitenoise(noise_maker, filepath, target_snr):
-    white_noise_path = 'dev-noise-whitenoise-' + str(target_snr)
+    white_noise_path = 'test-noise-whitenoise-' + str(target_snr)
     path, file = os.path.split(filepath)
-    noisy_path = path.replace('dev-clean', white_noise_path)
+    noisy_path = path.replace('test-clean', white_noise_path)
 
     if not os.path.exists(noisy_path):
         os.makedirs(noisy_path)
@@ -53,5 +53,5 @@ for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
 
     for target_snr in target_snrs:
         print('\tTarget SNR: ', target_snr)
-        create_gaussian(noise_maker, filepath, target_snr)
+        # create_gaussian(noise_maker, filepath, target_snr)
         create_whitenoise(noise_maker, filepath, target_snr)
