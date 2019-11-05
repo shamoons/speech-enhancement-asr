@@ -46,7 +46,8 @@ for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
     print('Processing: ', filepath)
 
     # target_snrs = np.arange(-5, 11)     # Chosen from https://arxiv.org/pdf/1802.00604.pdf
-    target_snrs = [-5, 0, 5, 10, 15, 20, 25]
+    target_snrs = [-5, 0, 5, 10, 15, 20, 25, 30, 35]
+    target_snrs = [30, 35, 40, 45]
 
     sound_file = SoundFile(filepath)
     noise_maker = NoiseMaker(sound_file=sound_file)

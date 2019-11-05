@@ -1,6 +1,7 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
 from soundfile import SoundFile
 import pandas as pd
+import argparse
 
 audio_file = AudioFile()
 iterations = 0
@@ -12,9 +13,16 @@ hypotheses = []
 output_df = pd.DataFrame(columns=['book_id', 'chapter_id', 'transcript_id',
                                   'transcript_text', 'clean_predicted_text', 'clean_word_distance', 'word_length'])
 
-while iterations < 250:
+parser = argparse.ArgumentParser(description='Calculate WER on speech files from a subset.')
+parser.add_argument('--subset', default='test-clean', help='subset to choose from')
+args = parser.parse_args()
+
+output_file = args.subset + '.csv'
+print('Filename', output_file)
+
+while iterations < 50:
+    loaded_audio = audio_file.load_random(subset=args.subset)
     print(f'Doing Iteration {iterations}')
-    loaded_audio = audio_file.load_random()
 
     # wiener_enhanced = SpeechEnhance(loaded_audio['dev-noise-gaussian-5'].audio_array).wiener()
 
@@ -49,15 +57,14 @@ while iterations < 250:
             'clean_predicted_text': clean_predicted_text,
             'clean_word_distance': clean_word_distance,
             'word_length': len(loaded_audio['transcript_text'].split(' '))
-            #            '5-snr-wer': word_error_rate
         }, ignore_index=True)
 
     if iterations % 10 == 0:
         print('Checkpoint saving')
-        output_df.to_csv('output_df.csv')
+        output_df.to_csv(output_file)
 
     iterations += 1
-# word_error_rate = speech_recognizer.word_error_rate(ground_truths, hypotheses)
-# print(word_error_rate)
+
+print(output_file)
 print(output_df)
-output_df.to_csv('output_df.csv')
+output_df.to_csv(output_file)

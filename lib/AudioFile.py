@@ -18,7 +18,7 @@ class AudioFile:
                                             f'{book_id}-{chapter_id}-{transcript_id}.flac'))
         return sound_file
 
-    def load(self, book_id, chapter_id, transcript_id):
+    def load(self, book_id, chapter_id, transcript_id, subset='test-clean'):
         def check_transcript_id(t_line):
             t_id = t_line.split(' ', 2)[0].split('-')[2]
             if t_id == transcript_id:
@@ -35,7 +35,7 @@ class AudioFile:
             'book_id': book_id,
             'chapter_id': chapter_id,
             'transcript_id': transcript_id,
-            'clean_sound_file': self.load_sound_file('test-clean', book_id, chapter_id, transcript_id),
+            'clean_sound_file': self.load_sound_file(subset, book_id, chapter_id, transcript_id),
             # 'dev-noise-gaussian-5': self.load_sound_file('dev-noise-gaussian-5', book_id, chapter_id, transcript_id)
         }
 
@@ -52,4 +52,4 @@ class AudioFile:
 
         transcript_id = chosen_transcript.split('.')[0].split('-')[2]
 
-        return self.load(book_id, chapter_id, transcript_id)
+        return self.load(book_id, chapter_id, transcript_id, subset=subset)
