@@ -21,6 +21,21 @@ class NoiseMaker:
 
         return noisy_signal
 
+    def source(self, source, target_snr):
+        source_noise = np.fromfile('data/noise/' + source + '.dat', sep='\n')
+        source_noise_start = np.random.randint(0, len(source_noise) - len(self.audio_signal))
+        source_noise = source_noise[source_noise_start:source_noise_start + len(self.audio_signal)]
+
+        source_noise_norm = np.linalg.norm(source_noise, 2)
+        source_noise_norm = np.sqrt(np.sum(source_noise ** 2))
+        signal_norm = np.linalg.norm(self.audio_signal, 2)
+        desired_noise_norm = signal_norm / 10 ** (target_snr / 20)
+        ratio = desired_noise_norm / source_noise_norm
+
+        noisy_signal = self.audio_signal + ratio * source_noise
+
+        return noisy_signal
+
     def white(self, target_snr):
         white_noise = np.fromfile('data/noise/white.dat', sep='\n')
         white_noise_start = np.random.randint(0, len(white_noise) - len(self.audio_signal))

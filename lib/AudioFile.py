@@ -46,7 +46,6 @@ class AudioFile:
 
         chapter_id = pydash.sample(os.listdir(clean_path))
         chapter_path = os.path.join(clean_path, chapter_id)
-        # transcripts_list = os.listdir(chapter_path)
         transcripts_list = [s for s in os.listdir(chapter_path) if s.endswith('.flac')]
         chosen_transcript = pydash.sample(transcripts_list)
 

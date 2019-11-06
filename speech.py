@@ -1,5 +1,7 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
 from soundfile import SoundFile
+# from pypesq import pypesq
+
 import pandas as pd
 import argparse
 
@@ -11,7 +13,7 @@ ground_truths = []
 hypotheses = []
 
 output_df = pd.DataFrame(columns=['book_id', 'chapter_id', 'transcript_id',
-                                  'transcript_text', 'clean_predicted_text', 'clean_word_distance', 'word_length'])
+                                  'transcript_text', 'predicted_text', 'word_distance', 'word_length', 'pesq'])
 
 parser = argparse.ArgumentParser(description='Calculate WER on speech files from a subset.')
 parser.add_argument('--subset', default='test-clean', help='subset to choose from')
@@ -20,7 +22,7 @@ args = parser.parse_args()
 output_file = args.subset + '.csv'
 print('Filename', output_file)
 
-while iterations < 50:
+while iterations < 250:
     loaded_audio = audio_file.load_random(subset=args.subset)
     print(f'Doing Iteration {iterations}')
 
@@ -33,9 +35,9 @@ while iterations < 50:
 
     # result = speech_recognizer.pocketsphinx()
     clean_result = speech_recognizer.deepspeech()
-    clean_predicted_text = ' '.join(clean_result).upper()
+    predicted_text = ' '.join(clean_result).upper()
 
-    clean_word_distance = speech_recognizer.word_distance(loaded_audio['transcript_text'], clean_predicted_text)
+    word_distance = speech_recognizer.word_distance(loaded_audio['transcript_text'], predicted_text)
 
     # speech_recognizer.set_sound_file(loaded_audio['dev-noise-gaussian-5'])
     # result = speech_recognizer.deepspeech()
@@ -45,8 +47,12 @@ while iterations < 50:
 
     # print('\tActual: ', loaded_audio['transcript_text'])
     # print('\tPredicted: ', predicted_text)
-    # print('\tWER: ', clean_word_distance)
+    # print('\tWER: ', word_distance)
     # print('\t5 WER: ', word_error_rate)
+
+    pesq = None
+    # if subset != 'test-clean':
+    #     pesq = pypesq(speech_recognizer.sample_rate, ref, deg, 'wb')
 
     output_df = output_df.append(
         {
@@ -54,9 +60,10 @@ while iterations < 50:
             'chapter_id': loaded_audio['chapter_id'],
             'transcript_id': loaded_audio['transcript_id'],
             'transcript_text': loaded_audio['transcript_text'],
-            'clean_predicted_text': clean_predicted_text,
-            'clean_word_distance': clean_word_distance,
-            'word_length': len(loaded_audio['transcript_text'].split(' '))
+            'predicted_text': predicted_text,
+            'word_distance': word_distance,
+            'word_length': len(loaded_audio['transcript_text'].split(' ')),
+            'pesq': pesq
         }, ignore_index=True)
 
     if iterations % 10 == 0:
