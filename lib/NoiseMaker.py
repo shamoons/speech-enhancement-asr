@@ -27,7 +27,7 @@ class NoiseMaker:
         source_noise = source_noise[source_noise_start:source_noise_start + len(self.audio_signal)]
 
         source_noise_norm = np.linalg.norm(source_noise, 2)
-        source_noise_norm = np.sqrt(np.sum(source_noise ** 2))
+        # source_noise_norm = np.sqrt(np.sum(source_noise ** 2))
         signal_norm = np.linalg.norm(self.audio_signal, 2)
         desired_noise_norm = signal_norm / 10 ** (target_snr / 20)
         ratio = desired_noise_norm / source_noise_norm

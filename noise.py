@@ -43,23 +43,6 @@ def create_from_source(noise_maker, filepath, target_snr, source):
     sf.write(noisy_filepath, noisy_signal, sound_file.samplerate)
 
 
-def create_whitenoise(noise_maker, filepath, target_snr):
-    white_noise_path = 'test-noise-whitenoise-' + str(target_snr)
-    path, file = os.path.split(filepath)
-    noisy_path = path.replace('test-clean', white_noise_path)
-
-    if not os.path.exists(noisy_path):
-        os.makedirs(noisy_path)
-
-    noisy_filepath = os.path.join(noisy_path, file)
-    noisy_signal = noise_maker.white(target_snr)
-
-    if os.path.exists(noisy_filepath):
-        os.remove(noisy_filepath)
-
-    sf.write(noisy_filepath, noisy_signal, sound_file.samplerate)
-
-
 for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
     print('Processing: ', filepath)
 
