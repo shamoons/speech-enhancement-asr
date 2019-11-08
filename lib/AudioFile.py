@@ -31,6 +31,7 @@ class AudioFile:
         transcript_text = transcript_line.split(' ', 1)[1].strip()
 
         return {
+            'subset': subset,
             'transcript_text': transcript_text,
             'book_id': book_id,
             'chapter_id': chapter_id,

@@ -14,7 +14,7 @@ class SpeechRecognizer:
         self.pocketsphinx_decoder = None
         self.deepspeech_model = None
 
-        self.initialize_pocketsphinx()
+        # self.initialize_pocketsphinx()
         self.initialize_deepspeech()
 
     def set_sound_file(self, sound_file):
