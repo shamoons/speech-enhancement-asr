@@ -48,5 +48,5 @@ for selected_file in selected_files:
     noisy_norm = np.linalg.norm(noisy_sound_file, 2)
     ratio = noisy_norm / noise_norm
 
-    print(selected_file, clean_path)
+    print(selected_file, clean_path, noise_file)
     print(clean_norm, desired_l2_norm, noisy_norm, noise_norm)
