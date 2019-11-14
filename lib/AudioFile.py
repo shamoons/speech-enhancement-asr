@@ -5,7 +5,7 @@ from soundfile import SoundFile
 
 class AudioFile:
     def __init__(self, data_path='data/LibriSpeech'):
-        books_path = os.path.join(data_path, 'BOOKS.txt')
+        books_path = os.path.join(data_path, 'BOOKS.TXT')
         books_content = open(books_path, 'r').readlines()
         self.DATA_PATH = data_path
         self.BOOKS = []
