@@ -38,7 +38,7 @@ while iterations < 250:
 
 
     pesq = None
-    if args.subset != 'test-clean':
+    if args.subset != 'test-clean' and False:
         noisy_audio_array = speech_recognizer.audio_array
         clean_audio = audio_file.load(
             loaded_audio['book_id'], loaded_audio['chapter_id'], loaded_audio['transcript_id'], 'test-clean')
