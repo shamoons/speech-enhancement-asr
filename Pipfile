@@ -13,10 +13,12 @@ matplotlib = "*"
 scipy = "*"
 soundfile = "==0.10.2"
 pocketsphinx = {git = "https://github.com/bambocher/pocketsphinx-python",ref = "v0.1.15"}
+python-pesq = {git="https://github.com/ludlows/python-pesq"}
 deepspeech = "==0.5.1"
-jiwer = "*"
 pydash = "*"
 tensorflow = "==1.13.1"
+pandas = "*"
+editdistance = "*"
 
 [requires]
 python_version = "3.6"
