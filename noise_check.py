@@ -32,6 +32,7 @@ for selected_file in selected_files:
     snr = int(snr)
 
     print('\n', snr)
+    quit()
     path_split[2] = 'test-clean'
 
     clean_path = '/'.join(path_split)
