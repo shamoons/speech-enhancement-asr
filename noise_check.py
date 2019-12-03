@@ -18,11 +18,13 @@ for root, directories, filenames in os.walk(data_path):
 
 selected_files = pydash.sample_size(sample_files, 10)
 
+print(selected_files)
+
 for selected_file in selected_files:
     path_split = selected_file.split('/')
     subset = path_split[2]
 
-    noise_file = 'data/noise/' + subset.replace('test-noise-', '').split('-')[0] + '.dat'
+    # noise_file = 'data/noise/' + subset.replace('test-noise-', '').split('-')[0] + '.dat'
     subset_split = subset.split('-')
     del subset_split[0:3]
     if len(subset_split) == 2:
