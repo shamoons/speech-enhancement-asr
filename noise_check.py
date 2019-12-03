@@ -41,7 +41,7 @@ for selected_file in selected_files:
     clean_norm = np.linalg.norm(clean_sound_file, 2)
     noisy_norm = np.linalg.norm(noise, 2)
 
-    actual_snr = 10 * np.log10(clean_norm / noisy_norm)
+    actual_snr = 20 * np.log10(clean_norm / noisy_norm)
 
     print(snr, actual_snr)
     print('\n')
