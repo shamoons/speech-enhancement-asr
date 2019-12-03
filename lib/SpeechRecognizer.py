@@ -1,4 +1,4 @@
-from pocketsphinx import get_model_path, Pocketsphinx, Decoder
+# from pocketsphinx import get_model_path, Pocketsphinx, Decoder
 from os import path
 import pydash
 import deepspeech
@@ -32,31 +32,31 @@ class SpeechRecognizer:
         self.deepspeech_model = deepspeech.Model(model, 26, 9, alphabet, beam_width)
         self.deepspeech_model.enableDecoderWithLM(alphabet, lm, trie, 0.75, 1.85)
 
-    def initialize_pocketsphinx(self):
-        config = Decoder.default_config()
-        config.set_string('-hmm', path.join('data', 'models', 'cmusphinx', 'en-us'))
-        config.set_string('-lm', path.join('data', 'models', 'cmusphinx', 'en-us.lm.bin'))
-        config.set_string('-dict', path.join('data', 'models', 'cmusphinx', 'cmudict-en-us.dict'))
-        config.set_string('-logfn', '/dev/null')
-        self.pocketsphinx_decoder = Decoder(config)
+    # def initialize_pocketsphinx(self):
+    #     config = Decoder.default_config()
+    #     config.set_string('-hmm', path.join('data', 'models', 'cmusphinx', 'en-us'))
+    #     config.set_string('-lm', path.join('data', 'models', 'cmusphinx', 'en-us.lm.bin'))
+    #     config.set_string('-dict', path.join('data', 'models', 'cmusphinx', 'cmudict-en-us.dict'))
+    #     config.set_string('-logfn', '/dev/null')
+    #     self.pocketsphinx_decoder = Decoder(config)
 
-    def pocketsphinx(self):
-        self.pocketsphinx_decoder.start_utt()
+    # def pocketsphinx(self):
+    #     self.pocketsphinx_decoder.start_utt()
 
-        # How many frames do we want to evaluate? Currently 10ms
-        sample_frames = int(self.samplerate / 10)
-        current_pos = 0
-        while current_pos < len(self.audio_array):
-            audio_data = self.audio_array[current_pos:sample_frames + current_pos].tobytes()
-            current_pos += sample_frames
-            self.pocketsphinx_decoder.process_raw(audio_data, True, False)
+    #     # How many frames do we want to evaluate? Currently 10ms
+    #     sample_frames = int(self.samplerate / 10)
+    #     current_pos = 0
+    #     while current_pos < len(self.audio_array):
+    #         audio_data = self.audio_array[current_pos:sample_frames + current_pos].tobytes()
+    #         current_pos += sample_frames
+    #         self.pocketsphinx_decoder.process_raw(audio_data, True, False)
 
-        self.pocketsphinx_decoder.end_utt()
-        words = pydash.filter_(self.pocketsphinx_decoder.seg(),
-                               lambda seg: '<' not in seg.word and '++' not in seg.word and '[' not in seg.word)
-        words = pydash.map_(words, lambda seg: re.sub(r'\([^)]*\)', '', seg.word))
+    #     self.pocketsphinx_decoder.end_utt()
+    #     words = pydash.filter_(self.pocketsphinx_decoder.seg(),
+    #                            lambda seg: '<' not in seg.word and '++' not in seg.word and '[' not in seg.word)
+    #     words = pydash.map_(words, lambda seg: re.sub(r'\([^)]*\)', '', seg.word))
 
-        return words
+    #     return words
 
     def deepspeech(self):
         audio_data = self.audio_array
