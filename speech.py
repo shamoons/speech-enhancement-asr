@@ -1,5 +1,4 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
-from soundfile import SoundFile
 from pypesq import pypesq
 
 import pandas as pd
@@ -36,9 +35,8 @@ while iterations < 250:
 
     word_distance = speech_recognizer.word_distance(loaded_audio['transcript_text'], predicted_text)
 
-
     pesq = None
-    if args.subset != 'test-clean' and False:
+    if args.subset != 'test-clean':
         noisy_audio_array = speech_recognizer.audio_array
         clean_audio = audio_file.load(
             loaded_audio['book_id'], loaded_audio['chapter_id'], loaded_audio['transcript_id'], 'test-clean')

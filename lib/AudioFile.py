@@ -37,7 +37,6 @@ class AudioFile:
             'chapter_id': chapter_id,
             'transcript_id': transcript_id,
             'clean_sound_file': self.load_sound_file(subset, book_id, chapter_id, transcript_id),
-            # 'dev-noise-gaussian-5': self.load_sound_file('dev-noise-gaussian-5', book_id, chapter_id, transcript_id)
         }
 
     def load_random(self, subset='test-clean'):
