@@ -1,5 +1,5 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
-from pypesq import pypesq
+from pypesq import pesq
 
 import pandas as pd
 import os
