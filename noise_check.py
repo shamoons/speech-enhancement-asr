@@ -22,7 +22,6 @@ for selected_file in selected_files:
     (head, tail) = os.path.split(selected_file)
     path_split = selected_file.split('/')
     subset = path_split[2]
-    # noise_file = 'data/noise/' + subset.replace('test-noise-', '').split('-')[0] + '.dat'
     subset_split = subset.split('-')
     del subset_split[0:3]
     if len(subset_split) == 2:
