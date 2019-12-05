@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b1a318b573ef14055f830d46bebd892386158e952023f8ae93e8f1f43d1bcc23"
+            "sha256": "a0a2fc2fe7cf9f4b58895135f8eea7cdf71ada5fe6d63c602d8680d891f7ae53"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -336,8 +336,8 @@
         },
         "python-pypesq": {
             "editable": true,
-            "git": "https://github.com/vBaiCai/python-pesq",
-            "ref": "0768cba738b3e044930e2d201c7c3705396433a2"
+            "git": "https://github.com/ludlows/python-pesq",
+            "ref": "e73f9b3ab6ce8d27661b6193c9b0a2cecb6d8396"
         },
         "pytz": {
             "hashes": [

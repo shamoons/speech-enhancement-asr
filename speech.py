@@ -1,5 +1,5 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
-from pypesq import pesq
+from pypesq import pypesq
 
 import pandas as pd
 import os
@@ -15,8 +15,10 @@ hypotheses = []
 output_df = pd.DataFrame(columns=['book_id', 'chapter_id', 'transcript_id',
                                   'transcript_text', 'predicted_text', 'word_distance', 'word_length', 'pesq'])
 
-parser = argparse.ArgumentParser(description='Calculate WER on speech files from a subset.')
-parser.add_argument('--subset', default='test-clean', help='subset to choose from')
+parser = argparse.ArgumentParser(
+    description='Calculate WER on speech files from a subset.')
+parser.add_argument('--subset', default='test-clean',
+                    help='subset to choose from')
 args = parser.parse_args()
 
 output_file = args.subset + '.csv'
@@ -28,25 +30,27 @@ while iterations < 250:
 
     speech_recognizer.set_sound_file(loaded_audio['clean_sound_file'])
 
-    # result = speech_recognizer.pocketsphinx()
     clean_result = speech_recognizer.deepspeech()
     sound_file_subset = loaded_audio['subset']
     predicted_text = ' '.join(clean_result).upper()
 
-    word_distance = speech_recognizer.word_distance(loaded_audio['transcript_text'], predicted_text)
+    word_distance = speech_recognizer.word_distance(
+        loaded_audio['transcript_text'], predicted_text)
 
-    pesq = None
+    calc_pesq = None
     if args.subset != 'test-clean':
+        print('here we go!')
         noisy_audio_array = speech_recognizer.audio_array
         clean_audio = audio_file.load(
             loaded_audio['book_id'], loaded_audio['chapter_id'], loaded_audio['transcript_id'], 'test-clean')
-        clean_speech_recognizer = speech_recognizer.set_sound_file(clean_audio['clean_sound_file'])
+        # clean_speech_recognizer = speech_recognizer.set_sound_file(clean_audio['clean_sound_file'])
+        clean_audio_array = clean_audio['clean_sound_file'].read()
 
-        print(clean_speech_recognizer.audio_array)
-        print(noisy_audio_array)
+        # print(clean_speech_recognizer.audio_array)
+        # print(noisy_audio_array)
 
-        pesq = pypesq(speech_recognizer.samplerate, clean_speech_recognizer.audio_array,
-                      noisy_audio_array, 'wb')
+        calc_pesq = pypesq( speech_recognizer.samplerate, clean_audio_array, noisy_audio_array, 'wb')
+        print('calc_pesq', calc_pesq)
 
     output_df = output_df.append(
         {
@@ -57,7 +61,7 @@ while iterations < 250:
             'predicted_text': predicted_text,
             'word_distance': word_distance,
             'word_length': len(loaded_audio['transcript_text'].split(' ')),
-            'pesq': pesq
+            'pesq': calc_pesq
         }, ignore_index=True)
 
     if iterations % 10 == 0:
