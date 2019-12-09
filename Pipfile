@@ -15,9 +15,8 @@ pydash = "*"
 tensorflow = "==1.13.1"
 pandas = "*"
 editdistance = "*"
-# pocketsphinx = {git = "https://github.com/bambocher/pocketsphinx-python",ref = "v0.1.15"}
-666c6e5 = {file = "https://github.com/ludlows/python-pesq/archive/master.zip"}
 cython = "*"
+pypesq = {file = "https://github.com/vBaiCai/python-pesq/archive/master.zip"}
 
 [requires]
 python_version = "3.6"

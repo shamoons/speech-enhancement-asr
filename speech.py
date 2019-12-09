@@ -24,7 +24,7 @@ args = parser.parse_args()
 output_file = args.subset + '.csv'
 print('Filename', output_file)
 
-while iterations < 250:
+while iterations < 1250:
     loaded_audio = audio_file.load_random(subset=args.subset)
     print(f'Doing Iteration {iterations}')
 
