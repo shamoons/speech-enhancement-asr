@@ -16,7 +16,9 @@ tensorflow = "==1.14"
 pandas = "*"
 editdistance = "*"
 cython = "*"
+pystoi = "*"
 scipy = "*"
+pesq = "*"
 
 [requires]
 python_version = "3.6"

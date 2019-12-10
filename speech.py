@@ -1,5 +1,6 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
-from pypesq import pesq
+from pesq import pesq
+from pystoi.stoi import stoi
 
 import pandas as pd
 import os
@@ -13,7 +14,8 @@ ground_truths = []
 hypotheses = []
 
 output_df = pd.DataFrame(columns=['book_id', 'chapter_id', 'transcript_id',
-                                  'transcript_text', 'predicted_text', 'word_distance', 'word_length', 'pesq'])
+                                  'transcript_text', 'predicted_text', 'word_distance',
+                                  'word_length', 'pesq', 'stoi'])
 
 parser = argparse.ArgumentParser(
     description='Calculate WER on speech files from a subset.')
@@ -38,6 +40,7 @@ while iterations < 1250:
         loaded_audio['transcript_text'], predicted_text)
 
     calc_pesq = None
+    calc_stoi = None
     if args.subset != 'test-clean':
         print('here we go!')
         noisy_audio_array = speech_recognizer.audio_array
@@ -47,7 +50,7 @@ while iterations < 1250:
 
 
         calc_pesq = pesq( speech_recognizer.samplerate, clean_audio_array, noisy_audio_array, 'wb')
-        print('calc_pesq', calc_pesq)
+        calc_stoi = stoi(clean_audio_array, noisy_audio_array, speech_recognizer.samplerate)
 
     output_df = output_df.append(
         {
@@ -58,7 +61,8 @@ while iterations < 1250:
             'predicted_text': predicted_text,
             'word_distance': word_distance,
             'word_length': len(loaded_audio['transcript_text'].split(' ')),
-            'pesq': calc_pesq
+            'pesq': calc_pesq,
+            'stoi': calc_stoi
         }, ignore_index=True)
 
     if iterations % 10 == 0:
