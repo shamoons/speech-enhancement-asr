@@ -1,5 +1,5 @@
 from lib import SpeechRecognizer, AudioFile, SpeechEnhance
-from pypesq import pypesq
+from pypesq import pesq
 
 import pandas as pd
 import os
@@ -43,13 +43,10 @@ while iterations < 1250:
         noisy_audio_array = speech_recognizer.audio_array
         clean_audio = audio_file.load(
             loaded_audio['book_id'], loaded_audio['chapter_id'], loaded_audio['transcript_id'], 'test-clean')
-        # clean_speech_recognizer = speech_recognizer.set_sound_file(clean_audio['clean_sound_file'])
         clean_audio_array = clean_audio['clean_sound_file'].read()
 
-        # print(clean_speech_recognizer.audio_array)
-        # print(noisy_audio_array)
 
-        calc_pesq = pypesq( speech_recognizer.samplerate, clean_audio_array, noisy_audio_array, 'wb')
+        calc_pesq = pesq( speech_recognizer.samplerate, clean_audio_array, noisy_audio_array, 'wb')
         print('calc_pesq', calc_pesq)
 
     output_df = output_df.append(
@@ -74,9 +71,8 @@ word_distance_sum = output_df['word_distance'].sum()
 word_length_sum = output_df['word_length'].sum()
 print('word_distance_sum', word_distance_sum)
 print('word_length_sum', word_length_sum)
-# wer = word_distance_sum / word_length_sum
+
 output_df.to_csv(output_file)
 
 print(output_df)
 print(output_file)
-# print('WER: ', wer)
