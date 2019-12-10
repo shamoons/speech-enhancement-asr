@@ -12,11 +12,11 @@ numpy = "*"
 soundfile = "==0.10.2"
 deepspeech = "==0.5.1"
 pydash = "*"
-tensorflow = "==1.13.1"
+tensorflow = "==1.14"
 pandas = "*"
 editdistance = "*"
 cython = "*"
-pypesq = {file = "https://github.com/vBaiCai/python-pesq/archive/master.zip"}
+scipy = "*"
 
 [requires]
 python_version = "3.6"

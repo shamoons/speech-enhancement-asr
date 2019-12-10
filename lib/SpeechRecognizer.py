@@ -28,7 +28,7 @@ class SpeechRecognizer:
     def set_samplerate(self, samplerate):
         self.samplerate = samplerate
 
-    def initialize_deepspeech(self, model='data/models/deepspeech-0.5.1-models/output_graph.pbmm', alphabet='data/models/deepspeech-0.5.1-models/alphabet.txt', lm='data/models/deepspeech-0.5.1-models/lm.binary', trie='/data/models/deepspeech-0.5.1-models/trie', beam_width=500):
+    def initialize_deepspeech(self, model='data/models/deepspeech-0.6.0-models/output_graph.pbmm', alphabet='data/models/deepspeech-0.6.0-models/alphabet.txt', lm='data/models/deepspeech-0.6.0-models/lm.binary', trie='/data/models/deepspeech-0.6.0-models/trie', beam_width=500):
         self.deepspeech_model = deepspeech.Model(model, 26, 9, alphabet, beam_width)
         self.deepspeech_model.enableDecoderWithLM(alphabet, lm, trie, 0.75, 1.85)
 
