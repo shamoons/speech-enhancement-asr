@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e9f6f86ca0dcb2cbf7e7fd764a260351888c22f2503687787790abf74d897933"
+            "sha256": "11ee17124e94b750623b67985006bb5ed7c4a88532d352bbbfa78d354fa3af8d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,9 +16,6 @@
         ]
     },
     "default": {
-        "666c6e5": {
-            "file": "https://github.com/ludlows/python-pesq/archive/master.zip"
-        },
         "absl-py": {
             "hashes": [
                 "sha256:d9129186431e150d7fe455f1cb1ecbb92bb5dba9da9bc3ef7b012d98c4db2526"
@@ -230,6 +227,7 @@
                 "sha256:51ae56894c6c93159086ffa2c94b5b3388c0400548ab26555c143e7cfa05b8e5",
                 "sha256:54817b696e87eb9e403e42643305f142cd8b940fe9b3b490bbf98c3b8a894cf4",
                 "sha256:549ad124df27c056b2e255ea1c44d30fb7a17d17676d03096ad5cd85edb32dc1",
+                "sha256:64f74da4a1dd0d2042e7d04cf8294e04ddad686f8eba9bb79e517ae582f6668d",
                 "sha256:6998be619c695910cb0effe5eb15d3a511d3d1a5d217d4bd0bebad1151ec2262",
                 "sha256:6ef7ab1089e3ef53ca099038f3c0a94d03e3560e6aff0e9d6c64c55fb13fc681",
                 "sha256:769e141512b54dee14ec76ed354fcacfc7d97fea5a7646b709f7400cf1838630",
@@ -244,6 +242,7 @@
                 "sha256:c0d4b04bbf96c47b6d360cd06939e72def512b20a18a8547fa4af810258355d5",
                 "sha256:c54a2c0dd4957776ace7f95879d81582298c5daf89e77fb8bee7378f132951de",
                 "sha256:cbf28ae4b5af0f05aa6e7551cee304f1d317dbed1eb7ac1d827cee2f1ef97a99",
+                "sha256:d35f7a3a6cefec82bfdad2785e78359a0e6a5fbb3f605dd5623ce88082ccd681",
                 "sha256:d3c59549f90a891691991c17f8e58c8544060fdf3ccdea267100fa5f561ff62f",
                 "sha256:d7ae7a0576b06cb8e8a1c265a8bc4b73d05fdee6429bffc9a26a6eb531e79d72",
                 "sha256:ecf4d0b56ee394a0984de15bceeb97cbe1fe485f1ac205121293fc44dcf3f31f",
@@ -367,6 +366,9 @@
             ],
             "index": "pypi",
             "version": "==4.7.6"
+        },
+        "pypesq": {
+            "file": "https://github.com/vBaiCai/python-pesq/archive/master.zip"
         },
         "python-dateutil": {
             "hashes": [
