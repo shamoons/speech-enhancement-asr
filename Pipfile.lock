@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6a5ca4655bc4156cca63c9db16703419d4425729b3c4639365d1e2c348a2ddcf"
+            "sha256": "915d6201003b0436eebbb2b01b90ce4b538323458959e1fff0cb378899e612da"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -473,7 +473,7 @@
                 "sha256:e84f2c8c7f23ad546076b1e73cec85706da19910b9a89c29cba3b64e297b2eb0"
             ],
             "index": "pypi",
-            "version": "==1.14"
+            "version": "==1.14.0"
         },
         "tensorflow-estimator": {
             "hashes": [
