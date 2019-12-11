@@ -1,8 +1,10 @@
 from scipy.signal import wiener
-from soundfile import SoundFile
 import soundfile as sf
 import os
 from lib import SpeechEnhance
+
+audio_file = AudioFile()
+iterations = 0
 
 file_path = 'data/LibriSpeech/dev-noise-whitenoise-10/84/121123/84-121123-0001.flac'
 # sound_file = SoundFile(file_path)
