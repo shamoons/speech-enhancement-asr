@@ -12,11 +12,7 @@ numpy = "*"
 soundfile = "==0.10.2"
 deepspeech = "==0.6.0"
 pydash = "*"
-<<<<<<< HEAD
 tensorflow = "~=1.14.0"
-=======
-tensorflow = "==1.14"
->>>>>>> 6c6e0cfda45fb089307ae2171b93304503d75f0f
 pandas = "*"
 editdistance = "*"
 cython = "*"
