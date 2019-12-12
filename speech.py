@@ -10,6 +10,7 @@ audio_file = AudioFile()
 iterations = 0
 
 speech_recognizer = SpeechRecognizer()
+speech_enhance = SpeechEnhance()
 ground_truths = []
 hypotheses = []
 
@@ -21,9 +22,15 @@ parser = argparse.ArgumentParser(
     description='Calculate WER on speech files from a subset.')
 parser.add_argument('--subset', default='test-clean',
                     help='subset to choose from')
+
+parser.add_argument('--enhancement', default='',
+                    help='Which enhancement to use')
 args = parser.parse_args()
 
-output_file = args.subset + '.csv'
+output_file = args.subset
+if args.enhancement != '':
+    output_file += '.' + args.enhancement
+output_file += '.csv'
 print('Filename', output_file)
 
 while iterations < 1250:
@@ -46,7 +53,10 @@ while iterations < 1250:
         clean_audio = audio_file.load(
             loaded_audio['book_id'], loaded_audio['chapter_id'], loaded_audio['transcript_id'], 'test-clean')
         clean_audio_array = clean_audio['clean_sound_file'].read()
-        
+
+        comparison_audio_array = clean_audio_array
+        if args.enhancement == 'wiener':
+            comparison_audio_array = speech_enhance.wiener(noisy_audio_array)
 
 
         calc_pesq = pesq( speech_recognizer.samplerate, clean_audio_array, noisy_audio_array, 'wb')
