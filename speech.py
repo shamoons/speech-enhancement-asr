@@ -53,6 +53,7 @@ while iterations < 1250:
         clean_audio = audio_file.load(
             loaded_audio['book_id'], loaded_audio['chapter_id'], loaded_audio['transcript_id'], 'test-clean')
         clean_audio_array = clean_audio['clean_sound_file'].read()
+        
 
         comparison_audio_array = clean_audio_array
         if args.enhancement == 'wiener':
