@@ -42,6 +42,6 @@ for selected_file in selected_files:
 
     actual_snr = 20 * np.log10(clean_norm / noisy_norm)
 
-    print(snr, actual_snr)
+    print(selected_file, snr, actual_snr)
     print('\n')
     continue
