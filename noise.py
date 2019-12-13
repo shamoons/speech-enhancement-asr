@@ -58,3 +58,4 @@ for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
         # create_whitenoise(noise_maker, filepath, target_snr)
         create_from_source(noise_maker, filepath, target_snr, 'white_16k')
         create_from_source(noise_maker, filepath, target_snr, 'babble_16k')
+        create_from_source(noise_maker, filepath, target_snr, 'machinegun_16k')
