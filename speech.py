@@ -11,6 +11,7 @@ iterations = 0
 
 speech_recognizer = SpeechRecognizer()
 speech_enhance = SpeechEnhance()
+
 ground_truths = []
 hypotheses = []
 
@@ -58,9 +59,11 @@ while iterations < 1250:
         comparison_audio_array = clean_audio_array
         if args.enhancement == 'wiener':
             comparison_audio_array = speech_enhance.wiener(noisy_audio_array)
+        elif args.enhancement == 'segan':
+            comparison_audio_array = speech_enhance.segan_enhance(noisy_audio_array)
+        print('comparison_audio_array', comparison_audio_array)
 
-
-        calc_pesq = pesq( speech_recognizer.samplerate, clean_audio_array, noisy_audio_array, 'wb')
+        calc_pesq = pesq(speech_recognizer.samplerate, clean_audio_array, noisy_audio_array, 'wb')
         calc_stoi = stoi(clean_audio_array, noisy_audio_array, speech_recognizer.samplerate)
 
     output_df = output_df.append(
