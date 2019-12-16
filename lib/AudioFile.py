@@ -41,16 +41,18 @@ class AudioFile:
 
     def load_random(self, subset='test-clean'):
         book_ids = os.listdir(os.path.join(self.DATA_PATH, subset))
+        book_ids.remove('.DS_Store')
+
         book_id = pydash.sample(book_ids)
         clean_path = os.path.join(self.DATA_PATH, subset, book_id)
 
-        chapter_id = pydash.sample(os.listdir(clean_path))
+        chapter_ids = os.listdir(clean_path)
+        chapter_ids.remove('.DS_Store')
+        chapter_id = pydash.sample(chapter_ids)
         chapter_path = os.path.join(clean_path, chapter_id)
-        for s in os.listdir(chapter_path):
-            print(s)
+
         transcripts_list = [s for s in os.listdir(chapter_path) if s.endswith('.flac')]
         chosen_transcript = pydash.sample(transcripts_list)
-        print('chosen_transcript', chosen_transcript)
 
         transcript_id = chosen_transcript.split('.')[0].split('-')[2]
 

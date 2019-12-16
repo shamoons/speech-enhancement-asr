@@ -1,6 +1,7 @@
 from scipy.signal import wiener
 import json
 import torch
+import soundfile as sf
 from .segan_pytorch.segan.models import SEGAN
 from .segan_pytorch.segan.datasets import normalize_wave_minmax
 from .segan_pytorch.segan.datasets import pre_emphasize
@@ -31,15 +32,11 @@ class SpeechEnhance:
         return wiener(audio_signal)
 
     def segan_enhance(self, audio_signal):
-        print('SEGAN_ENHANCE')
         wav = normalize_wave_minmax(audio_signal)
-        print('wav', wav)
         wav = pre_emphasize(wav)
-        print('wav2', wav)
         pwav = torch.FloatTensor(wav).view(1,1,-1)
-        print('pwav', pwav)
-
 
         g_wav, g_c = self.segan.generate(pwav)
-        print('hi', g_wav, g_c)
+        sf.write('file.wav', g_wav, 16000)
+
         return g_wav
