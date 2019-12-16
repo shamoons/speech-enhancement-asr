@@ -37,6 +37,5 @@ class SpeechEnhance:
         pwav = torch.FloatTensor(wav).view(1,1,-1)
 
         g_wav, g_c = self.segan.generate(pwav)
-        sf.write('file.wav', g_wav, 16000)
 
         return g_wav
