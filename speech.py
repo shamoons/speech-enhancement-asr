@@ -59,8 +59,8 @@ def main():
                 comparison_audio_array = speech_enhance.wiener(noisy_audio_array)
             elif args.enhancement == 'segan':
                 comparison_audio_array = speech_enhance.segan_enhance(noisy_audio_array)
-            elif args.enhancement == 'deepxi'
-                comparison_audio_array = speech_enhance.segan_enhance(noisy_audio_array)
+            elif args.enhancement == 'deepxi':
+                comparison_audio_array = speech_enhance.deepxi_enhance(noisy_audio_array)
 
             print('comparison_audio_array', comparison_audio_array)
 
