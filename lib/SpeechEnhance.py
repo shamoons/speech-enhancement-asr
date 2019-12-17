@@ -4,6 +4,7 @@ import torch
 from .segan_pytorch.segan.models import SEGAN
 from .segan_pytorch.segan.datasets import normalize_wave_minmax
 from .segan_pytorch.segan.datasets import pre_emphasize
+from .DeepXiNet import DeepXiNet
 
 class ArgParser(object):
 
@@ -19,6 +20,8 @@ class SpeechEnhance:
         self.segan = SEGAN(self.segan_args)
         self.segan.G.load_pretrained("data/models/segan_v1.1/segan+_generator.ckpt", True)
         self.segan.G.eval()
+
+        self.deepxi = DeepXiNet()
 
 
     def wiener(self, audio_signal):

@@ -6,50 +6,83 @@ from .deepxi.lib.dev.acoustic.analysis_synthesis.polar import synthesis
 from .deepxi.lib.dev import optimisation as optimisation
 
 
-
 class DeepXiNet:
-	def __init__(self, args):
-		print('Preparing graph...')
+    def __init__(self):
+        print('Preparing graph...')
 
-		## RESNET
-		self.input_ph = tf.placeholder(tf.float32, shape=[None, None, args.d_in], name='input_ph') # noisy speech MS placeholder.
-		self.nframes_ph = tf.placeholder(tf.int32, shape=[None], name='nframes_ph') # noisy speech MS sequence length placeholder.
-		self.output = ResNet(self.input_ph, self.nframes_ph, args.norm_type, n_blocks=args.n_blocks, boolean_mask=True, d_out=args.d_out, 
-			d_model=args.d_model, d_f=args.d_f, k_size=args.k_size, max_d_rate=args.max_d_rate)
+        self.args = {
+            "d_in": 257,
+            "norm_type": "FrameLayerNorm",
+            "n_blocks": 40,
+            "d_out": 257,
+            "d_model": 256,
+            "d_f": 64,
+            "k_size": 3,
+            "max_d_rate": 16
+        }
 
-		## TRAINING FEATURE EXTRACTION GRAPH
-		self.s_ph = tf.placeholder(tf.int16, shape=[None, None], name='s_ph') # clean speech placeholder.
-		self.d_ph = tf.placeholder(tf.int16, shape=[None, None], name='d_ph') # noise placeholder.
-		self.s_len_ph = tf.placeholder(tf.int32, shape=[None], name='s_len_ph') # clean speech sequence length placeholder.
-		self.d_len_ph = tf.placeholder(tf.int32, shape=[None], name='d_len_ph') # noise sequence length placeholder.
-		self.snr_ph = tf.placeholder(tf.float32, shape=[None], name='snr_ph') # SNR placeholder.
-		self.train_feat = polar.input_target_xi(self.s_ph, self.d_ph, self.s_len_ph, 
-			self.d_len_ph, self.snr_ph, args.N_w, args.N_s, args.NFFT, args.f_s, args.stats['mu_hat'], args.stats['sigma_hat'])
+        # RESNET
+        # noisy speech MS placeholder.
+        self.input_ph = tf.placeholder(
+            tf.float32, shape=[None, None, self.args["d_in"]], name='input_ph')
+        # noisy speech MS sequence length placeholder.
+        self.nframes_ph = tf.placeholder(
+            tf.int32, shape=[None], name='nframes_ph')
+        self.output = ResNet(self.input_ph, self.nframes_ph, self.args["norm_type"], n_blocks=self.args["n_blocks"],
+                             boolean_mask=True, d_out=self.args["d_out"], d_model=self.args["d_model"], d_f=self.args["d_f"], k_size=self.args["k_size"],
+                             max_d_rate=self.args["max_d_rate"])
 
-		## INFERENCE FEATURE EXTRACTION GRAPH
-		self.infer_feat = polar.input(self.s_ph, self.s_len_ph, args.N_w, args.N_s, args.NFFT, args.f_s)
+        # TRAINING FEATURE EXTRACTION GRAPH
+        # clean speech placeholder.
+        self.s_ph = tf.placeholder(tf.int16, shape=[None, None], name='s_ph')
+        # noise placeholder.
+        self.d_ph = tf.placeholder(tf.int16, shape=[None, None], name='d_ph')
+        # clean speech sequence length placeholder.
+        self.s_len_ph = tf.placeholder(tf.int32, shape=[None], name='s_len_ph')
+        # noise sequence length placeholder.
+        self.d_len_ph = tf.placeholder(tf.int32, shape=[None], name='d_len_ph')
+        # SNR placeholder.
+        self.snr_ph = tf.placeholder(tf.float32, shape=[None], name='snr_ph')
+        self.train_feat = polar.input_target_xi(self.s_ph, self.d_ph, self.s_len_ph,
+                                                self.d_len_ph, self.snr_ph, self.args.N_w, self.args.N_s, self.args.NFFT, self.args.f_s, self.args.stats['mu_hat'], self.args.stats['sigma_hat'])
 
-		## PLACEHOLDERS
-		self.x_ph = tf.placeholder(tf.int16, shape=[None, None], name='x_ph') # noisy speech placeholder.
-		self.x_len_ph = tf.placeholder(tf.int32, shape=[None], name='x_len_ph') # noisy speech sequence length placeholder.
-		self.target_ph = tf.placeholder(tf.float32, shape=[None, args.d_out], name='target_ph') # training target placeholder.
-		self.keep_prob_ph = tf.placeholder(tf.float32, name='keep_prob_ph') # keep probability placeholder.
-		self.training_ph = tf.placeholder(tf.bool, name='training_ph') # training placeholder.
+        # INFERENCE FEATURE EXTRACTION GRAPH
+        self.infer_feat = polar.input(
+            self.s_ph, self.s_len_ph, self.args.N_w, self.args.N_s, self.args.NFFT, self.args.f_s)
 
-		## SYNTHESIS GRAPH
-		# if args.infer:	
-		self.infer_output = tf.nn.sigmoid(self.output)
-		self.y_MAG_ph = tf.placeholder(tf.float32, shape=[None, None, args.d_in], name='y_MAG_ph') 
-		self.x_PHA_ph = tf.placeholder(tf.float32, [None, None, args.d_in], name='x_PHA_ph')
-		self.y = synthesis(self.y_MAG_ph, self.x_PHA_ph, args.N_w, args.N_s, args.NFFT)
+        # PLACEHOLDERS
+        # noisy speech placeholder.
+        self.x_ph = tf.placeholder(tf.int16, shape=[None, None], name='x_ph')
+        # noisy speech sequence length placeholder.
+        self.x_len_ph = tf.placeholder(tf.int32, shape=[None], name='x_len_ph')
+        # training target placeholder.
+        self.target_ph = tf.placeholder(
+            tf.float32, shape=[None, self.args.d_out], name='target_ph')
+        # keep probability placeholder.
+        self.keep_prob_ph = tf.placeholder(tf.float32, name='keep_prob_ph')
+        # training placeholder.
+        self.training_ph = tf.placeholder(tf.bool, name='training_ph')
 
-		## LOSS & OPTIMIZER
-		self.loss = optimisation.loss(self.target_ph, self.output, 'mean_sigmoid_cross_entropy', axis=[1])
-		self.total_loss = tf.reduce_mean(self.loss, axis=0)
-		self.trainer, _ = optimisation.optimiser(self.total_loss, optimizer='adam', grad_clip=True)
+        # SYNTHESIS GRAPH
+        # if self.args.infer:
+        self.infer_output = tf.nn.sigmoid(self.output)
+        self.y_MAG_ph = tf.placeholder(
+            tf.float32, shape=[None, None, self.args.d_in], name='y_MAG_ph')
+        self.x_PHA_ph = tf.placeholder(
+            tf.float32, [None, None, self.args.d_in], name='x_PHA_ph')
+        self.y = synthesis(self.y_MAG_ph, self.x_PHA_ph,
+                           self.args.N_w, self.args.N_s, self.args.NFFT)
 
-		## SAVE VARIABLES
-		self.saver = tf.train.Saver(max_to_keep=256)
+        ## LOSS & OPTIMIZER
+        self.loss = optimisation.loss(
+            self.target_ph, self.output, 'mean_sigmoid_cross_entropy', axis=[1])
+        self.total_loss = tf.reduce_mean(self.loss, axis=0)
+        self.trainer, _ = optimisation.optimiser(
+            self.total_loss, optimizer='adam', grad_clip=True)
 
-		## NUMBER OF PARAMETERS
-		args.params = (np.sum([np.prod(v.get_shape().as_list()) for v in tf.trainable_variables()]))
+        # SAVE VARIABLES
+        self.saver = tf.train.Saver(max_to_keep=256)
+
+        # NUMBER OF PARAMETERS
+        self.args.params = (np.sum([np.prod(v.get_shape().as_list())
+                                    for v in tf.trainable_variables()]))
