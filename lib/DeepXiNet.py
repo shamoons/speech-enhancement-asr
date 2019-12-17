@@ -20,7 +20,7 @@ class DeepXiNet:
             "k_size": 3,
             "max_d_rate": 16
         }
-
+TabN
         # RESNET
         # noisy speech MS placeholder.
         self.input_ph = tf.placeholder(
