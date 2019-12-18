@@ -1,10 +1,20 @@
+# import sys
+# import os
+# from pathlib import Path
+
+# IMPORT_PATH = Path(__file__)
+# print('IMPORT_PATH', IMPORT_PATH)
+
+# sys.path.append(IMPORT_PATH)
+
 import tensorflow as tf
 import numpy as np
+import pickle
+
 from .deepxi.lib.dev.ResNet import ResNet
 from .deepxi.lib.dev.acoustic.feat import polar
 from .deepxi.lib.dev.acoustic.analysis_synthesis.polar import synthesis
-from .deepxi.lib.dev import optimisation as optimisation
-
+from .deepxi.lib.dev import optimisation
 
 class DeepXiNet:
     def __init__(self):
@@ -18,9 +28,18 @@ class DeepXiNet:
             "d_model": 256,
             "d_f": 64,
             "k_size": 3,
-            "max_d_rate": 16
+            "max_d_rate": 16,
+            "f_s": 16000,
+            "T_w": 32,
+            "T_s": 16
         }
-TabN
+
+        self.args['N_w'] = int(self.args["f_s"]*self.args["T_w"]*0.001)
+        self.args['N_s'] = int(self.args["f_s"]*self.args["T_s"]*0.001)
+        self.args['NFFT'] = int(pow(2, np.ceil(np.log2(self.args['N_w']))))
+
+        self.args['stats'] = self.get_stats(self.args)
+
         # RESNET
         # noisy speech MS placeholder.
         self.input_ph = tf.placeholder(
@@ -44,11 +63,11 @@ TabN
         # SNR placeholder.
         self.snr_ph = tf.placeholder(tf.float32, shape=[None], name='snr_ph')
         self.train_feat = polar.input_target_xi(self.s_ph, self.d_ph, self.s_len_ph,
-                                                self.d_len_ph, self.snr_ph, self.args.N_w, self.args.N_s, self.args.NFFT, self.args.f_s, self.args.stats['mu_hat'], self.args.stats['sigma_hat'])
+                                                self.d_len_ph, self.snr_ph, self.args["N_w"], self.args["N_s"], self.args["NFFT"], self.args["f_s"], self.args['stats']['mu_hat'], self.args['stats']['sigma_hat'])
 
         # INFERENCE FEATURE EXTRACTION GRAPH
         self.infer_feat = polar.input(
-            self.s_ph, self.s_len_ph, self.args.N_w, self.args.N_s, self.args.NFFT, self.args.f_s)
+            self.s_ph, self.s_len_ph, self.args["N_w"], self.args["N_s"], self.args["NFFT"], self.args["f_s"])
 
         # PLACEHOLDERS
         # noisy speech placeholder.
@@ -57,7 +76,7 @@ TabN
         self.x_len_ph = tf.placeholder(tf.int32, shape=[None], name='x_len_ph')
         # training target placeholder.
         self.target_ph = tf.placeholder(
-            tf.float32, shape=[None, self.args.d_out], name='target_ph')
+            tf.float32, shape=[None, self.args["d_out"]], name='target_ph')
         # keep probability placeholder.
         self.keep_prob_ph = tf.placeholder(tf.float32, name='keep_prob_ph')
         # training placeholder.
@@ -67,11 +86,11 @@ TabN
         # if self.args.infer:
         self.infer_output = tf.nn.sigmoid(self.output)
         self.y_MAG_ph = tf.placeholder(
-            tf.float32, shape=[None, None, self.args.d_in], name='y_MAG_ph')
+            tf.float32, shape=[None, None, self.args["d_in"]], name='y_MAG_ph')
         self.x_PHA_ph = tf.placeholder(
-            tf.float32, [None, None, self.args.d_in], name='x_PHA_ph')
+            tf.float32, [None, None, self.args["d_in"]], name='x_PHA_ph')
         self.y = synthesis(self.y_MAG_ph, self.x_PHA_ph,
-                           self.args.N_w, self.args.N_s, self.args.NFFT)
+                           self.args["N_w"], self.args["N_s"], self.args["NFFT"])
 
         ## LOSS & OPTIMIZER
         self.loss = optimisation.loss(
@@ -84,5 +103,14 @@ TabN
         self.saver = tf.train.Saver(max_to_keep=256)
 
         # NUMBER OF PARAMETERS
-        self.args.params = (np.sum([np.prod(v.get_shape().as_list())
+        self.args['params'] = (np.sum([np.prod(v.get_shape().as_list())
                                     for v in tf.trainable_variables()]))
+
+
+    ## GET STATISTICS OF SAMPLE
+    def get_stats(self, args):
+        print('Loading sample statistics from pickle file...')
+        stats_file = 'lib/deepxi/data/3e_set/stats.p'
+        with open(stats_file, 'rb') as f:
+            stats = pickle.load(f)
+        return stats
