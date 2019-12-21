@@ -1,6 +1,7 @@
 import json
 from scipy.signal import wiener
 import torch
+import tensorflow as tf
 from .segan_pytorch.segan.models import SEGAN
 from .segan_pytorch.segan.datasets import normalize_wave_minmax
 from .segan_pytorch.segan.datasets import pre_emphasize
@@ -23,7 +24,6 @@ class SpeechEnhance:
 
         self.deepxi = DeepXiNet()
 
-
     def wiener(self, audio_signal):
         return wiener(audio_signal)
 
@@ -37,4 +37,6 @@ class SpeechEnhance:
         return g_wav
     
     def deepxi_enhance(self, audio_signal):
-        return
+        with tf.Session() as sess:
+            self.deepxi.saver.restore(sess, 'lib/deepxi/model/3e/epoch-173')
+            return

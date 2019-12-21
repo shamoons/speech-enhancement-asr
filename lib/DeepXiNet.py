@@ -100,7 +100,7 @@ class DeepXiNet:
             self.total_loss, optimizer='adam', grad_clip=True)
 
         # SAVE VARIABLES
-        self.saver = tf.train.Saver(max_to_keep=256)
+        self.saver = tf.compat.v1.train.Saver(max_to_keep=256)
 
         # NUMBER OF PARAMETERS
         self.args['params'] = (np.sum([np.prod(v.get_shape().as_list())
@@ -108,7 +108,7 @@ class DeepXiNet:
 
 
     ## GET STATISTICS OF SAMPLE
-    def get_stats(self, args):
+    def get_stats(self):
         print('Loading sample statistics from pickle file...')
         stats_file = 'lib/deepxi/data/3e_set/stats.p'
         with open(stats_file, 'rb') as f:
