@@ -20,12 +20,19 @@ output_df = pd.DataFrame(columns=['book_id', 'chapter_id', 'transcript_id',
 
 parser = argparse.ArgumentParser(
     description='Calculate WER on speech files from a subset.')
+
+parser.add_argument('--noise', default='',
+                    help='Noise to test against')
+
+
 parser.add_argument('--subset', default='test-clean',
                     help='subset to choose from')
 
 parser.add_argument('--enhancement', default='',
                     help='Which enhancement to use')
 args = parser.parse_args()
+
+noise_type = args.noise
 
 output_file = args.subset
 if args.enhancement != '':
@@ -34,8 +41,10 @@ output_file += '.csv'
 print('Filename', output_file)
 
 while iterations < 1250:
-    loaded_audio = audio_file.load_random(subset=args.subset)
+    loaded_audio = audio_file.load_random()
+    print('loaded_audio', loaded_audio)
     print(f'Doing Iteration {iterations}')
+    quit()
 
     speech_recognizer.set_sound_file(loaded_audio['clean_sound_file'])
 

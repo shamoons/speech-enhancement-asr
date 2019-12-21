@@ -1,4 +1,4 @@
 [submodule "lib/segan_pytorch"]
 	path = lib/segan_pytorch
-	url = git@github.com:shamoons/segan_pytorch.git
+	url = https://github.com/shamoons/segan_pytorch/
 	branch = hotfix/reg_loss
