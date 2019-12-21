@@ -1,3 +1,0 @@
-[submodule "lib/segan_pytorch"]
-	path = lib/segan_pytorch
-	url = https://github.com/santi-pdp/segan_pytorch.git
