@@ -57,7 +57,7 @@ def main():
         else:
             audio_array = add_noise_from_source(clean_audio_array, args.noise, args.snr)
 
-        sf.write('noisy.wav', audio_array, samplerate)
+        # sf.write('noisy.wav', audio_array, samplerate)
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
