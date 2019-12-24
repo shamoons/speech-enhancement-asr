@@ -66,9 +66,9 @@ def main():
         elif args.enhancement == 'segan':
             audio_array = speech_enhance.segan_enhance(noisy_audio_array)
 
-        sf.write('clean.wav', clean_audio_array, samplerate)
-        sf.write('noisy.wav', noisy_audio_array, samplerate)
-        sf.write('enhanced.wav', audio_array, samplerate)
+        # sf.write('clean.wav', clean_audio_array, samplerate)
+        # sf.write('noisy.wav', noisy_audio_array, samplerate)
+        # sf.write('enhanced.wav', audio_array, samplerate)
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
