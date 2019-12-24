@@ -2,6 +2,8 @@ import os
 from sklearn.preprocessing import minmax_scale
 import pydash
 import numpy as np
+import subprocess
+
 
 def add_noise(audio_array, source_noise, target_snr):
     source_noise_norm = np.linalg.norm(source_noise, 2)
@@ -24,15 +26,20 @@ def add_noise(audio_array, source_noise, target_snr):
 
     return noisy_signal
 
+def read_noise_file(audio_array_length, source):
+    source_noise = np.fromfile('data/noise/' + source + '_16k.dat', sep='\n')
+    source_noise_start = np.random.randint(
+        0, len(source_noise) - audio_array_length)
+    source_noise = source_noise[source_noise_start:
+                                source_noise_start + audio_array_length]
+    source_noise = minmax_scale(source_noise, feature_range=(-100, 100))
+
+    return source_noise
+
 
 def add_noise_from_source(audio_array, source, target_snr):
     target_snr = float(target_snr)
-    source_noise = np.fromfile('data/noise/' + source + '_16k.dat', sep='\n')
-    source_noise_start = np.random.randint(
-        0, len(source_noise) - len(audio_array))
-    source_noise = source_noise[source_noise_start:
-                                source_noise_start + len(audio_array)]
-    source_noise = minmax_scale(source_noise, feature_range=(-100, 100))
+    source_noise = read_noise_file(len(audio_array), source)
 
     return add_noise(audio_array, source_noise, target_snr)
 
@@ -51,10 +58,12 @@ def add_shift_noise(audio_array, target_snr, num_slices=3, path='data/noise'):
             # We are not adding noise, so we can add zeroes
             slice_source_noise = np.zeros(slice_length)
         else:
-            slice_source_noise = np.fromfile('data/noise/' + selected_noise, sep='\n')
-            slice_source_noise_start = np.random.randint(0, len(slice_source_noise) - slice_length)
-            slice_source_noise = slice_source_noise[slice_source_noise_start:slice_source_noise_start + slice_length]
-            slice_source_noise = minmax_scale(slice_source_noise, feature_range=(-100, 100))
+            slice_source_noise = read_noise_file(len(audio_array), selected_noise)
+
+            # slice_source_noise = np.fromfile('data/noise/' + selected_noise, sep='\n')
+            # slice_source_noise_start = np.random.randint(0, len(slice_source_noise) - slice_length)
+            # slice_source_noise = slice_source_noise[slice_source_noise_start:slice_source_noise_start + slice_length]
+            # slice_source_noise = minmax_scale(slice_source_noise, feature_range=(-100, 100))
             source_noise = np.concatenate([source_noise, slice_source_noise])
 
     return add_noise(audio_array, source_noise, target_snr)
