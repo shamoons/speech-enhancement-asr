@@ -5,7 +5,7 @@ from pesq import pesq
 from pystoi.stoi import stoi
 from utilities.files import sample_files, get_transcript
 from utilities.noise import add_noise_from_source, add_shift_noise
-from lib import SpeechRecognition
+from lib import SpeechRecognition, SpeechEnhance
 
 
 def main():
@@ -42,6 +42,7 @@ def main():
     print('Filename: ', output_file_name)
 
     audio_files = sample_files(args.iterations)
+    speech_enhance = SpeechEnhance()
     for idx, audio_file in enumerate(audio_files):
         print(f'Doing Iteration {idx}: ', audio_file)
 
@@ -50,14 +51,24 @@ def main():
         transcript_text = get_transcript(audio_file)
 
         if args.noise == '':
-            audio_array = clean_audio_array
+            noisy_audio_array = clean_audio_array
         elif args.noise.__contains__('shift'):
             num_slices = int(args.noise.split('.')[1])
-            audio_array = add_shift_noise(clean_audio_array, args.snr, num_slices)
+            noisy_audio_array = add_shift_noise(clean_audio_array, args.snr, num_slices)
         else:
-            audio_array = add_noise_from_source(clean_audio_array, args.noise, args.snr)
+            noisy_audio_array = add_noise_from_source(clean_audio_array, args.noise, args.snr)
+        
 
-        # sf.write('noisy.wav', audio_array, samplerate)
+        if args.enhancement == '':
+            audio_array = noisy_audio_array
+        elif args.enhancement == 'wiener':
+            audio_array = speech_enhance.wiener(noisy_audio_array) 
+        elif args.enhancement == 'segan':
+            audio_array = speech_enhance.segan_enhance(noisy_audio_array)
+
+        sf.write('clean.wav', clean_audio_array, samplerate)
+        sf.write('noisy.wav', noisy_audio_array, samplerate)
+        sf.write('enhanced.wav', audio_array, samplerate)
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
