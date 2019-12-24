@@ -30,6 +30,10 @@ class SpeechEnhance:
         pwav = torch.FloatTensor(wav).view(1,1,-1)
 
         g_wav, g_c = self.segan.generate(pwav)
+
+        print(g_wav)
+        print('max', np.amax(g_wav))
+        print('min', np.amin(g_wav))
         
 
         return g_wav

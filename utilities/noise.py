@@ -2,7 +2,6 @@ import os
 from sklearn.preprocessing import minmax_scale
 import pydash
 import numpy as np
-import subprocess
 
 
 def add_noise(audio_array, source_noise, target_snr):
@@ -11,6 +10,8 @@ def add_noise(audio_array, source_noise, target_snr):
     desired_noise_norm = signal_norm / 10 ** (target_snr / 20)
     ratio = desired_noise_norm / source_noise_norm
 
+    print('len(audio_array)', len(audio_array))
+    print('len(source_noise)', len(source_noise))
     while len(source_noise) < len(audio_array):
         source_noise = np.append(source_noise, 0)
     noisy_signal = audio_array + ratio * source_noise
@@ -54,11 +55,12 @@ def add_shift_noise(audio_array, target_snr, num_slices=3, path='data/noise'):
     source_noise = []
     slice_length = int(len(audio_array) / num_slices)
     for selected_noise in selected_noises:
+        selected_noise = selected_noise.replace('_16k.dat', '')
         if selected_noise == '':
             # We are not adding noise, so we can add zeroes
             slice_source_noise = np.zeros(slice_length)
         else:
-            slice_source_noise = read_noise_file(len(audio_array), selected_noise)
+            slice_source_noise = read_noise_file(slice_length, selected_noise)
 
             # slice_source_noise = np.fromfile('data/noise/' + selected_noise, sep='\n')
             # slice_source_noise_start = np.random.randint(0, len(slice_source_noise) - slice_length)
