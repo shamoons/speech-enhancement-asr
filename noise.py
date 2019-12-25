@@ -1,11 +1,10 @@
 import glob
 import os
 import soundfile as sf
-from soundfile import SoundFile
-from lib import NoiseMaker
-
 import numpy as np
 import math
+from soundfile import SoundFile
+from lib import NoiseMaker
 
 clean_path = 'data/LibriSpeech/test-clean/'
 
