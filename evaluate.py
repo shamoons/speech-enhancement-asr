@@ -27,6 +27,9 @@ def main():
     parser.add_argument('--iterations', default=1250,
                         help='Number of iterations')
 
+    parser.add_argument('--save', default='0',
+                        help='Save current file')
+
 
     args = parser.parse_args()
 
@@ -65,9 +68,10 @@ def main():
         elif args.enhancement == 'segan':
             audio_array = speech_enhance.segan_enhance(noisy_audio_array)
 
-        sf.write('output.clean.wav', clean_audio_array, samplerate)
-        sf.write('output.noisy.wav', noisy_audio_array, samplerate)
-        sf.write('output.enhanced.wav', audio_array, samplerate)
+        if args.save == '1':
+            sf.write('output.clean.wav', clean_audio_array, samplerate)
+            sf.write('output.noisy.wav', noisy_audio_array, samplerate)
+            sf.write('output.enhanced.wav', audio_array, samplerate)
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
