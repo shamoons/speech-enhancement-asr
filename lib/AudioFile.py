@@ -39,10 +39,30 @@ class AudioFile:
             'clean_sound_file': self.load_sound_file(subset, book_id, chapter_id, transcript_id),
         }
 
-    def load_random(self, subset='test-clean'):
+    def load_random_from_subset(self, subset='test-clean'):
         book_ids = os.listdir(os.path.join(self.DATA_PATH, subset))
+        book_ids = pydash.filter_(book_ids, lambda book_id: book_id != '.DS_Store')
+
         book_id = pydash.sample(book_ids)
         clean_path = os.path.join(self.DATA_PATH, subset, book_id)
+
+        chapter_ids = os.listdir(clean_path)
+        chapter_ids = pydash.filter_(chapter_ids, lambda chapter_id: chapter_id != '.DS_Store')
+
+        chapter_id = pydash.sample(chapter_ids)
+        chapter_path = os.path.join(clean_path, chapter_id)
+
+        transcripts_list = [s for s in os.listdir(chapter_path) if s.endswith('.flac')]
+        chosen_transcript = pydash.sample(transcripts_list)
+
+        transcript_id = chosen_transcript.split('.')[0].split('-')[2]
+
+        return self.load(book_id, chapter_id, transcript_id, subset=subset)
+
+    def load_random(self):
+        book_ids = os.listdir(os.path.join(self.DATA_PATH, 'test-clean'))
+        book_id = pydash.sample(book_ids)
+        clean_path = os.path.join(self.DATA_PATH, 'test-clean', book_id)
 
         chapter_id = pydash.sample(os.listdir(clean_path))
         chapter_path = os.path.join(clean_path, chapter_id)
@@ -51,4 +71,4 @@ class AudioFile:
 
         transcript_id = chosen_transcript.split('.')[0].split('-')[2]
 
-        return self.load(book_id, chapter_id, transcript_id, subset=subset)
+        return self.load(book_id, chapter_id, transcript_id, subset='test-clean')
