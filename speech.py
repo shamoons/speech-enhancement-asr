@@ -24,6 +24,12 @@ def main():
 
     parser.add_argument('--enhancement', default='',
                         help='Which enhancement to use')
+
+
+    parser.add_argument('--noise', default='',
+                        help='Noise to test against')
+
+
     args = parser.parse_args()
 
     output_file = args.subset
@@ -33,14 +39,17 @@ def main():
     print('Filename', output_file)
 
     while iterations < 1250:
-        loaded_audio = audio_file.load_random(subset=args.subset)
+        loaded_audio = audio_file.load_random()
+        print('loaded_audio', loaded_audio)
         print(f'Doing Iteration {iterations}')
+
 
         speech_recognizer.set_sound_file(loaded_audio['clean_sound_file'])
         sample_rate = speech_recognizer.samplerate
+		audio_array = speech_recognizer.audio_array
 
-        clean_result = speech_recognizer.deepspeech()
-        predicted_text = ' '.join(clean_result).upper()
+        asr_result = speech_recognizer.deepspeech(audio_array)
+        predicted_text = ' '.join(asr_result).upper()
 
         word_distance = speech_recognizer.word_distance(
             loaded_audio['transcript_text'], predicted_text)

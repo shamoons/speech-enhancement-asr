@@ -2,6 +2,8 @@ import json
 from scipy.signal import wiener
 import torch
 import tensorflow as tf
+import numpy as np
+from scipy.signal import wiener
 from .segan_pytorch.segan.models import SEGAN
 from .segan_pytorch.segan.datasets import normalize_wave_minmax
 from .segan_pytorch.segan.datasets import pre_emphasize
@@ -23,9 +25,12 @@ class SpeechEnhance:
         self.segan.G.eval()
 
         self.deepxi = DeepXiNet()
+    def convert_to_int(self, audio_signal):
+        enhanced_signal = (audio_signal * 32767).astype(np.int16)
+        return enhanced_signal
 
     def wiener(self, audio_signal):
-        return wiener(audio_signal)
+        return self.convert_to_int(wiener(audio_signal))
 
     def segan_enhance(self, audio_signal):
         wav = normalize_wave_minmax(audio_signal)
@@ -34,7 +39,7 @@ class SpeechEnhance:
 
         g_wav, g_c = self.segan.generate(pwav)
 
-        return g_wav
+        return self.convert_to_int(g_wav)
     
     def deepxi_enhance(self, audio_signal):
         with tf.Session() as sess:

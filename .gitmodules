@@ -1,6 +1,6 @@
 [submodule "lib/segan_pytorch"]
-	path = lib/segan_pytorch
-	url = https://github.com/santi-pdp/segan_pytorch.git
+	url = git@github.com:shamoons/segan_pytorch.git
+	branch = hotfix/reg_loss
 [submodule "lib/deepxi"]
 	path = lib/deepxi
 	url = https://github.com/anicolson/DeepXi.git
