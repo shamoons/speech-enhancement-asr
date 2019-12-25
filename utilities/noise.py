@@ -62,10 +62,6 @@ def add_shift_noise(audio_array, target_snr, num_slices=3, path='data/noise'):
         else:
             slice_source_noise = read_noise_file(slice_length, selected_noise)
 
-            # slice_source_noise = np.fromfile('data/noise/' + selected_noise, sep='\n')
-            # slice_source_noise_start = np.random.randint(0, len(slice_source_noise) - slice_length)
-            # slice_source_noise = slice_source_noise[slice_source_noise_start:slice_source_noise_start + slice_length]
-            # slice_source_noise = minmax_scale(slice_source_noise, feature_range=(-100, 100))
             source_noise = np.concatenate([source_noise, slice_source_noise])
 
     return add_noise(audio_array, source_noise, target_snr)

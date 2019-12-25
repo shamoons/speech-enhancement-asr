@@ -21,8 +21,12 @@ class SpeechEnhance:
         self.segan.G.load_pretrained("data/models/segan_v1.1/segan+_generator.ckpt", True)
         self.segan.G.eval()
 
+    def convert_to_int(self, audio_signal):
+        enhanced_signal = (audio_signal * 32767).astype(np.int16)
+        return enhanced_signal
+
     def wiener(self, audio_signal):
-        return wiener(audio_signal)
+        return self.convert_to_int(wiener(audio_signal))
 
     def segan_enhance(self, audio_signal):
         wav = normalize_wave_minmax(audio_signal)
@@ -31,9 +35,4 @@ class SpeechEnhance:
 
         g_wav, g_c = self.segan.generate(pwav)
 
-        print(g_wav)
-        print('max', np.amax(g_wav))
-        print('min', np.amin(g_wav))
-        
-
-        return g_wav
+        return self.convert_to_int(g_wav)

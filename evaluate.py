@@ -57,7 +57,6 @@ def main():
             noisy_audio_array = add_shift_noise(clean_audio_array, args.snr, num_slices)
         else:
             noisy_audio_array = add_noise_from_source(clean_audio_array, args.noise, args.snr)
-        
 
         if args.enhancement == '':
             audio_array = noisy_audio_array
