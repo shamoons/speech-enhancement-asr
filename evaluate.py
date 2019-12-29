@@ -35,9 +35,9 @@ def main():
 
     if args.noise == '' and args.enhancement == '':
         output_file_name = 'evaluate-clean'
-    elif args.noise != '':
+    if args.noise != '':
         output_file_name = 'evaluate-' + args.noise + '-SNR' + args.snr
-    elif args.enhancement != '':
+    if args.enhancement != '':
         output_file_name = output_file_name + '.' + args.enhancement
 
     output_file_name = output_file_name + '.csv'
