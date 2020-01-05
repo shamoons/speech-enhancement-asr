@@ -31,9 +31,12 @@ class SpeechEnhance:
 
     def wiener(self, audio_signal):
         enhanced_signal = wiener(audio_signal)
+        print('audio_signal')
         print(audio_signal)
         print(np.min(audio_signal),np.max(audio_signal))
 
+        print('enhanced_signal')
+        # enhanced_signal = (enhanced_signal).astype(np.int16)
         print(enhanced_signal)
         print(np.min(enhanced_signal),np.max(enhanced_signal))
         return enhanced_signal

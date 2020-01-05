@@ -10,8 +10,6 @@ def add_noise(audio_array, source_noise, target_snr):
     desired_noise_norm = signal_norm / 10 ** (target_snr / 20)
     ratio = desired_noise_norm / source_noise_norm
 
-    print('len(audio_array)', len(audio_array))
-    print('len(source_noise)', len(source_noise))
     while len(source_noise) < len(audio_array):
         source_noise = np.append(source_noise, 0)
     noisy_signal = audio_array + ratio * source_noise
