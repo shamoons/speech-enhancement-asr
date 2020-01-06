@@ -1,7 +1,12 @@
+# pylint: disable=wrong-import-position
+import warnings
+warnings.simplefilter(action="ignore", category=FutureWarning)
+
 import argparse
 import soundfile as sf
 import pandas as pd
 import numpy as np
+
 from pesq import pesq
 from pystoi.stoi import stoi
 from utilities.files import sample_files, get_transcript
@@ -56,8 +61,7 @@ def main():
 
         print('clean_audio_array')
         print(clean_audio_array)
-        print(np.min(clean_audio_array),np.max(clean_audio_array))
-
+        print(np.min(clean_audio_array), np.max(clean_audio_array))
 
         if args.noise == '':
             noisy_audio_array = clean_audio_array

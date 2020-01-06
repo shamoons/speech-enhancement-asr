@@ -2,3 +2,4 @@
 generated-members=torch.*
 [MASTER]
 disable=C0111,C0114,C0115,C0116
+ignore=E402
