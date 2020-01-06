@@ -1,7 +1,7 @@
 import json
 from scipy.signal import wiener
 import torch
-import tensorflow as tf
+
 import numpy as np
 from scipy.signal import wiener
 from .segan_pytorch.segan.models import SEGAN
