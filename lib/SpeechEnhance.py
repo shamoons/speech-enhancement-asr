@@ -48,6 +48,9 @@ class SpeechEnhance:
         g_wav, g_c = self.segan.generate(pwav)
 
         return self.convert_to_int(g_wav)
+    
+    def sevcae(self, audio_signal):
+        return audio_signal
 
     # def deepxi_enhance(self, audio_signal):
     #     with tf.Session() as sess:
