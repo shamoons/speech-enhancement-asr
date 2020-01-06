@@ -1,7 +1,7 @@
 [submodule "lib/segan_pytorch"]
+	path = lib/segan_pytorch
 	url = git@github.com:shamoons/segan_pytorch.git
 	branch = hotfix/reg_loss
-
 [submodule "lib/sevcae"]
 	path = lib/sevcae
 	url = git@github.com:shamoons/Speech-Enhancement-with-Variance-Constrained-Autoencoders.git
