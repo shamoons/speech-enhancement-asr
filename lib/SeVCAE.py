@@ -1,4 +1,4 @@
-from .se-vcae import encoder
+# from .se-vcae import encoder
 
 class SeVCAE:
     def __init__(self):
