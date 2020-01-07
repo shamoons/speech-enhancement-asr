@@ -1,20 +1,30 @@
+# pylint: disable=wrong-import-position
+import warnings
+warnings.simplefilter(action="ignore")
+import os
+
 import argparse
 import soundfile as sf
 import pandas as pd
+import numpy as np
+
 from pesq import pesq
 from pystoi.stoi import stoi
 from utilities.files import sample_files, get_transcript
 from utilities.noise import add_noise_from_source, add_shift_noise
 from lib import SpeechRecognition, SpeechEnhance
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 
 def main():
     speech_recognizer = SpeechRecognition()
 
     output_df = pd.DataFrame(columns=['audio_file', 'transcript_text', 'predicted_text', 'word_distance',
-                                    'word_length', 'pesq', 'stoi'])
+                                      'word_length', 'pesq', 'stoi'])
 
-    parser = argparse.ArgumentParser(description='Calculate WER on speech files by potentially adding noise.')
+    parser = argparse.ArgumentParser(
+        description='Calculate WER on speech files by potentially adding noise.')
     parser.add_argument('--enhancement', default='',
                         help='Which enhancement to use')
 
@@ -30,14 +40,13 @@ def main():
     parser.add_argument('--save', default='0',
                         help='Save current file')
 
-
     args = parser.parse_args()
 
     if args.noise == '' and args.enhancement == '':
         output_file_name = 'evaluate-clean'
-    elif args.noise != '':
+    if args.noise != '':
         output_file_name = 'evaluate-' + args.noise + '-SNR' + args.snr
-    elif args.enhancement != '':
+    if args.enhancement != '':
         output_file_name = output_file_name + '.' + args.enhancement
 
     output_file_name = output_file_name + '.csv'
@@ -57,16 +66,20 @@ def main():
             noisy_audio_array = clean_audio_array
         elif args.noise.__contains__('shift'):
             num_slices = int(args.noise.split('.')[1])
-            noisy_audio_array = add_shift_noise(clean_audio_array, args.snr, num_slices)
+            noisy_audio_array = add_shift_noise(
+                clean_audio_array, args.snr, num_slices)
         else:
-            noisy_audio_array = add_noise_from_source(clean_audio_array, args.noise, args.snr)
+            noisy_audio_array = add_noise_from_source(
+                clean_audio_array, args.noise, args.snr)
 
         if args.enhancement == '':
             audio_array = noisy_audio_array
         elif args.enhancement == 'wiener':
-            audio_array = speech_enhance.wiener(noisy_audio_array) 
+            audio_array = speech_enhance.wiener(noisy_audio_array)
         elif args.enhancement == 'segan':
             audio_array = speech_enhance.segan_enhance(noisy_audio_array)
+        elif args.enhancement == 'sevcae':
+            audio_array = speech_enhance.sevcae(noisy_audio_array)
 
         if args.save == '1':
             sf.write('output.clean.wav', clean_audio_array, samplerate)
@@ -75,7 +88,8 @@ def main():
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
-        word_distance = speech_recognizer.word_distance(transcript_text, predicted_text)
+        word_distance = speech_recognizer.word_distance(
+            transcript_text, predicted_text)
 
         calc_pesq = None
         calc_stoi = None
@@ -104,11 +118,11 @@ def main():
     print(output_df)
     print(output_file_name)
 
+    # print('T', transcript_text)
+    # print('P', predicted_text)
+    # print('WD', word_distance)
+    # print('\n')
 
-        # print('T', transcript_text)
-        # print('P', predicted_text)
-        # print('WD', word_distance)
-        # print('\n')
 
 if __name__ == '__main__':
     main()
