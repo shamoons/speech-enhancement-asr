@@ -79,6 +79,8 @@ def main():
             audio_array = speech_enhance.wiener(noisy_audio_array)
         elif args.enhancement == 'segan':
             audio_array = speech_enhance.segan_enhance(noisy_audio_array)
+        elif args.enhancement == 'sevcae':
+            audio_array = speech_enhance.sevcae(noisy_audio_array)
 
         if args.save == '1':
             sf.write('output.clean.wav', clean_audio_array, samplerate)
