@@ -8,13 +8,13 @@ pylint = "<2.0.0"
 autopep8 = "*"
 
 [packages]
+cython = "*"
 soundfile = "==0.10.2"
 deepspeech = "==0.6.0"
 pydash = "*"
 tensorflow = "~=1.14.0"
 pandas = "*"
 editdistance = "*"
-cython = "*"
 pystoi = "*"
 scipy = "~=1.1.0"
 pesq = "*"
@@ -30,6 +30,8 @@ torchvision = "~=0.2.1"
 ahoproc-tools = {git = "https://github.com/santi-pdp/ahoproc_tools",ref = "master"}
 sklearn = "*"
 sevcae = {editable = true,git = "https://github.com/shamoons/Speech-Enhancement-with-Variance-Constrained-Autoencoders"}
+pillow = "~=6.2.2"
+opt-einsum = "*"
 
 [requires]
 python_version = "3.6"

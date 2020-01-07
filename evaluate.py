@@ -1,6 +1,7 @@
 # pylint: disable=wrong-import-position
 import warnings
-warnings.simplefilter(action="ignore", category=FutureWarning)
+warnings.simplefilter(action="ignore")
+import os
 
 import argparse
 import soundfile as sf
@@ -12,6 +13,8 @@ from pystoi.stoi import stoi
 from utilities.files import sample_files, get_transcript
 from utilities.noise import add_noise_from_source, add_shift_noise
 from lib import SpeechRecognition, SpeechEnhance
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def main():

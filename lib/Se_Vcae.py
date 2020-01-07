@@ -1,8 +1,8 @@
 import tensorflow as tf
 import numpy as np
-from sevcae.SE_VCAE import encoder
-from sevcae.SE_VCAE import decoder
-from sevcae.SE_VCAE import de_emph
+from SE_VCAE import encoder
+from SE_VCAE import decoder
+from SE_VCAE import de_emph
 
 class SeVcae:
     def __init__(self, model_name):
@@ -14,6 +14,8 @@ class SeVcae:
             "overlap_p": 0.5,
             "hann_window": np.hanning(600)
         }
+        self.encoder_reuse = False
+        self.decoder_reuse = False
 
         self.opts["overlap_c"] = int(self.opts["cs"]  * self.opts["overlap_p"] )
 
@@ -64,10 +66,12 @@ class SeVcae:
         X_n = tf.placeholder(tf.float32, shape=[None, 1000])
         X = tf.placeholder(tf.float32, shape=[None, 600])
 
-        Z_mu = encoder(X_n, self.opts["z_dim"])
+        Z_mu = encoder(X_n, self.opts["z_dim"], reuse=self.encoder_reuse)
+        self.encoder_reuse = True
         Z = Z_mu
 
-        X_hat = decoder(Z)
+        X_hat = decoder(Z, reuse=self.decoder_reuse)
+        self.decoder_reuse = True
 
         saver = tf.train.Saver()
 
