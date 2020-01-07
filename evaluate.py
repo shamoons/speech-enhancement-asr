@@ -59,10 +59,6 @@ def main():
 
         transcript_text = get_transcript(audio_file)
 
-        print('clean_audio_array')
-        print(clean_audio_array)
-        print(np.min(clean_audio_array), np.max(clean_audio_array))
-
         if args.noise == '':
             noisy_audio_array = clean_audio_array
         elif args.noise.__contains__('shift'):

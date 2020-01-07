@@ -94,8 +94,4 @@ class SeVcae:
         enhanced = enhanced[0:len(audio_signal)]
         enhanced = de_emph(enhanced)
 
-        # Save the file
-        # fn = files[i].split('/')[-1]
-        # print(fn)
-        # sf.write(save_path + '/' + fn, enhanced, 16000)
         return enhanced

@@ -34,6 +34,10 @@ class SpeechEnhance:
     def convert_to_int(self, audio_signal):
         enhanced_signal = (audio_signal * 32767).astype(np.int16)
         return enhanced_signal
+     
+    def convert_to_float(self, audio_signal):
+        float_audio_signal = (audio_signal / 32767).astype(np.float64)
+        return float_audio_signal 
 
     def wiener(self, audio_signal):
         float_audio_signal = (audio_signal / 32767).astype(np.float64)
@@ -53,9 +57,10 @@ class SpeechEnhance:
         return self.convert_to_int(g_wav)
     
     def sevcae(self, audio_signal):
+        float_audio_signal = self.convert_to_float(audio_signal)
 
-        enhanced_signal = self.se_vcae.enhance(audio_signal)
-        return enhanced_signal
+        enhanced_signal = self.se_vcae.enhance(float_audio_signal)
+        return self.convert_to_int(enhanced_signal)
 
     # def deepxi_enhance(self, audio_signal):
     #     with tf.Session() as sess:
