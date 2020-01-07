@@ -15,6 +15,17 @@ pandas = "*"
 cython = "*"
 pesq = {file = "https://github.com/ludlows/python-pesq/archive/master.zip"}
 pystoi = "*"
+pydash = "*"
+sklearn = "*"
+torch = "==0.4.1"
+torchvision = "~=0.2.1"
+pillow = "~=6.2.2"
+librosa = "~=0.6.1"
+ahoproc-tools = {git = "https://github.com/santi-pdp/ahoproc_tools",ref = "master"}
+tensorboardX = "~=1.4"
+sevcae = {editable = true,git = "https://github.com/shamoons/Speech-Enhancement-with-Variance-Constrained-Autoencoders"}
+opt-einsum = "*"
+editdistance = "*"
 
 [packagesOLD]
 cython = "*"
