@@ -1,12 +1,14 @@
 import json
 from scipy.signal import wiener
 import torch
-import tensorflow as tf
+
 import numpy as np
 from scipy.signal import wiener
 from .segan_pytorch.segan.models import SEGAN
 from .segan_pytorch.segan.datasets import normalize_wave_minmax
 from .segan_pytorch.segan.datasets import pre_emphasize
+from .Se_Vcae import SeVcae
+
 # from .DeepXiNet import DeepXiNet
 
 
@@ -27,10 +29,15 @@ class SpeechEnhance:
             "data/models/segan_v1.1/segan+_generator.ckpt", True)
         self.segan.G.eval()
 
-        # self.deepxi = DeepXiNet()
+        self.se_vcae = SeVcae('data/models/se_vcae/DN_VCAE_330lf_w600.ckpt')
+
     def convert_to_int(self, audio_signal):
         enhanced_signal = (audio_signal * 32767).astype(np.int16)
         return enhanced_signal
+     
+    def convert_to_float(self, audio_signal):
+        float_audio_signal = (audio_signal / 32767).astype(np.float64)
+        return float_audio_signal 
 
     def wiener(self, audio_signal):
         float_audio_signal = (audio_signal / 32767).astype(np.float64)
@@ -48,6 +55,12 @@ class SpeechEnhance:
         g_wav, g_c = self.segan.generate(pwav)
 
         return self.convert_to_int(g_wav)
+    
+    def sevcae(self, audio_signal):
+        float_audio_signal = self.convert_to_float(audio_signal)
+
+        enhanced_signal = self.se_vcae.enhance(float_audio_signal)
+        return self.convert_to_int(enhanced_signal)
 
     # def deepxi_enhance(self, audio_signal):
     #     with tf.Session() as sess:

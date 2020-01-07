@@ -1,12 +1,20 @@
+# pylint: disable=wrong-import-position
+import warnings
+warnings.simplefilter(action="ignore")
+import os
+
 import argparse
 import soundfile as sf
 import pandas as pd
 import numpy as np
+
 from pesq import pesq
 from pystoi.stoi import stoi
 from utilities.files import sample_files, get_transcript
 from utilities.noise import add_noise_from_source, add_shift_noise
 from lib import SpeechRecognition, SpeechEnhance
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def main():
@@ -70,6 +78,8 @@ def main():
             audio_array = speech_enhance.wiener(noisy_audio_array)
         elif args.enhancement == 'segan':
             audio_array = speech_enhance.segan_enhance(noisy_audio_array)
+        elif args.enhancement == 'sevcae':
+            audio_array = speech_enhance.sevcae(noisy_audio_array)
 
         if args.save == '1':
             sf.write('output.clean.wav', clean_audio_array, samplerate)
