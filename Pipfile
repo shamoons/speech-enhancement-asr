@@ -14,6 +14,7 @@ soundfile = "==0.10.2"
 pandas = "*"
 cython = "*"
 pesq = {file = "https://github.com/ludlows/python-pesq/archive/master.zip"}
+pystoi = "*"
 
 [packagesOLD]
 cython = "*"

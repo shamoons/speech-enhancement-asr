@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7b7fa1b74596d26b4ca6cead3e616d5d579dc67504d016dac995d9e46c168452"
+            "sha256": "ccd5c1e7dbfd4af924078329ffa67c6063de8b345b116593c6886674dd669df6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,9 +16,6 @@
         ]
     },
     "default": {
-        "666c6e5": {
-            "file": "https://github.com/ludlows/python-pesq/archive/master.zip"
-        },
         "absl-py": {
             "hashes": [
                 "sha256:75e737d6ce7723d9ff9b7aa1ba3233c34be62ef18d5859e706b8fdc828989830"
@@ -298,6 +295,9 @@
             ],
             "index": "pypi",
             "version": "==0.25.3"
+        },
+        "pesq": {
+            "file": "https://github.com/ludlows/python-pesq/archive/master.zip"
         },
         "protobuf": {
             "hashes": [
