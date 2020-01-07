@@ -8,6 +8,13 @@ pylint = "<2.0.0"
 autopep8 = "*"
 
 [packages]
+tensorflow = "==1.14.0"
+deepspeech = "==0.6.0"
+soundfile = "==0.10.2"
+pandas = "*"
+cython = "*"
+
+[packagesOLD]
 cython = "*"
 soundfile = "==0.10.2"
 deepspeech = "==0.6.0"
