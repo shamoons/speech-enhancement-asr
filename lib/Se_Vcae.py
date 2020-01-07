@@ -1,8 +1,8 @@
 import tensorflow as tf
 import numpy as np
-from .sevcae.SE_VCAE import encoder
-from .sevcae.SE_VCAE import decoder
-from .sevcae.SE_VCAE import de_emph
+from sevcae.SE_VCAE import encoder
+from sevcae.SE_VCAE import decoder
+from sevcae.SE_VCAE import de_emph
 
 class SeVcae:
     def __init__(self, model_name):
