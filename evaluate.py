@@ -41,11 +41,14 @@ def main():
                         help='Save current file')
 
     args = parser.parse_args()
+    noisy_path = 'data/LibriSpeech/'
 
     if args.noise == '' and args.enhancement == '':
         output_file_name = 'evaluate-clean'
+        noisy_path += 'test-clean'
     if args.noise != '':
         output_file_name = 'evaluate-' + args.noise + '-SNR' + args.snr
+        noisy_path += 'test-noise-' + args.noise + '-' + args.snr
     if args.enhancement != '':
         output_file_name = output_file_name + '.' + args.enhancement
 
@@ -53,24 +56,28 @@ def main():
 
     print('Filename: ', output_file_name)
 
-    audio_files = sample_files(args.iterations)
+    audio_files = sample_files(args.iterations, path=noisy_path)
     speech_enhance = SpeechEnhance()
     for idx, audio_file in enumerate(audio_files):
         print(f'Doing Iteration {idx}: ', audio_file)
 
-        clean_audio_array, samplerate = sf.read(audio_file, dtype='int16')
+        parts = audio_file.split('/')
+        parts[2] = 'test-clean'
+        clean_audio_file = '/'.join(parts)
+        clean_audio_array, samplerate = sf.read(clean_audio_file, dtype='int16')
+        noisy_audio_array, samplerate = sf.read(audio_file, dtype='int16')
 
         transcript_text = get_transcript(audio_file)
 
-        if args.noise == '':
-            noisy_audio_array = clean_audio_array
-        elif args.noise.__contains__('shift'):
-            num_slices = int(args.noise.split('.')[1])
-            noisy_audio_array = add_shift_noise(
-                clean_audio_array, args.snr, num_slices)
-        else:
-            noisy_audio_array = add_noise_from_source(
-                clean_audio_array, args.noise, args.snr)
+        # if args.noise == '':
+        #     noisy_audio_array = clean_audio_array
+        # elif args.noise.__contains__('shift'):
+        #     num_slices = int(args.noise.split('.')[1])
+        #     noisy_audio_array = add_shift_noise(
+        #         clean_audio_array, args.snr, num_slices)
+        # else:
+        #     noisy_audio_array = add_noise_from_source(
+        #         clean_audio_array, args.noise, args.snr)
 
         if args.enhancement == '':
             audio_array = noisy_audio_array
