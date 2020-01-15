@@ -88,9 +88,12 @@ def main():
             audio_array = speech_enhance.sevcae(noisy_audio_array)
 
         if args.save == '1':
-            sf.write('output.clean.wav', clean_audio_array, samplerate)
-            sf.write('output.noisy.wav', noisy_audio_array, samplerate)
-            sf.write('output.enhanced.wav', audio_array, samplerate)
+            save_file_path = clean_audio_file.split('/')[1]
+            file_path = save_file_path.split('.')[0]
+
+            sf.write('output/' + file_path + '.clean.wav', clean_audio_array, samplerate)
+            sf.write('output/' + file_path + '.noisy.wav', noisy_audio_array, samplerate)
+            sf.write('output/' + file_path + '.enhanced.wav', audio_array, samplerate)
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
