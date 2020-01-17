@@ -14,14 +14,14 @@ def add_noise(audio_array, source_noise, target_snr):
         source_noise = np.append(source_noise, 0)
     noisy_signal = audio_array + ratio * source_noise
 
-    noisy_signal = noisy_signal.astype(np.int16)
+    # noisy_signal = noisy_signal.astype(np.int16)
 
-    noise = noisy_signal - audio_array
-    clean_norm = np.linalg.norm(audio_array, 2)
-    noisy_norm = np.linalg.norm(noise, 2)
+    # noise = noisy_signal - audio_array
+    # clean_norm = np.linalg.norm(audio_array, 2)
+    # noisy_norm = np.linalg.norm(noise, 2)
 
-    actual_snr = 20 * np.log10(clean_norm / noisy_norm)
-    print('Target SNR: ', target_snr, 'Actual SNR: ', actual_snr)
+    # actual_snr = 20 * np.log10(clean_norm / noisy_norm)
+    # print('Target SNR: ', target_snr, 'Actual SNR: ', actual_snr)
 
     return noisy_signal
 

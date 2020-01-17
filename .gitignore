@@ -6,3 +6,4 @@ data/models/
 test-*.csv
 .DS_Store
 evaluate-*.csv
+output/
