@@ -63,8 +63,10 @@ def main():
         parts = audio_file.split('/')
         parts[2] = 'test-clean'
         clean_audio_file = '/'.join(parts)
-        clean_audio_array, samplerate = sf.read(clean_audio_file, dtype='int16')
-        noisy_audio_array, samplerate = sf.read(audio_file, dtype='int16')
+        # clean_audio_array, samplerate = sf.read(clean_audio_file, dtype='int16')
+        # noisy_audio_array, samplerate = sf.read(audio_file, dtype='int16')
+        clean_audio_array, samplerate = sf.read(clean_audio_file)
+        noisy_audio_array, samplerate = sf.read(audio_file)
 
         transcript_text = get_transcript(audio_file)
 
@@ -88,12 +90,17 @@ def main():
             audio_array = speech_enhance.sevcae(noisy_audio_array)
 
         if args.save == '1':
-            save_file_path = clean_audio_file.split('/')[1]
-            file_path = save_file_path.split('.')[0]
+            head_tail = os.path.split(clean_audio_file)
+            tail = head_tail[1]
+            file_path = tail.split('.')[0]
 
             sf.write('output/' + file_path + '.clean.wav', clean_audio_array, samplerate)
-            sf.write('output/' + file_path + '.noisy.wav', noisy_audio_array, samplerate)
-            sf.write('output/' + file_path + '.enhanced.wav', audio_array, samplerate)
+
+            if args.noise != '':
+                sf.write('output/' + file_path + '.' + args.noise + '.' + args.snr + '.wav', noisy_audio_array, samplerate)
+
+                if args.enhancement != '':
+                    sf.write('output/' + file_path + '.' + args.noise + '.' + args.snr + '.' + args.enhancement + '.wav', audio_array, samplerate)
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
