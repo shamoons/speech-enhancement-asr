@@ -1,5 +1,6 @@
 import deepspeech
 import editdistance
+import numpy as np
 
 
 class SpeechRecognition:
@@ -12,6 +13,7 @@ class SpeechRecognition:
         self.deepspeech_model.enableDecoderWithLM(lm, trie, 0.75, 1.85)
 
     def deepspeech(self, audio_array):
+        audio_array = (audio_array * 32767).astype(np.int16)
         words = self.deepspeech_model.stt(audio_array)
         return words.split(' ')
 
