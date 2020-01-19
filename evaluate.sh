@@ -9,5 +9,5 @@ do
     else
         set -- --noise "$1" --snr $snr --iterations 1250 --enhancement "$2"
     fi
-    pipenv run python evaluate.py "$@"
+    pipenv run python evaluate.py "$@" >> $1.$snr.$2.out
 done
