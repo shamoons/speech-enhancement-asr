@@ -45,7 +45,6 @@ class SpeechEnhance:
         # float_audio_signal = (audio_signal / 32767).astype(np.float64)
         # enhanced_signal = wiener(float_audio_signal)
         enhanced_signal = wiener(audio_signal)
-        print('enhanced audio signal', enhanced_signal)
 
         # enhanced_signal = self.convert_to_int(enhanced_signal)
         # enhanced_signal = self.convert_to_int(enhanced_signal)
@@ -58,11 +57,7 @@ class SpeechEnhance:
         wav = pre_emphasize(wav)
         pwav = torch.FloatTensor(wav).view(1, 1, -1)
 
-        print('audio_signal', audio_signal)
-        print('float_audio_signal', float_audio_signal)
-        print('pwav', pwav)
         g_wav, g_c = self.segan.generate(pwav)
-        print('g_wav', g_wav)
 
         return g_wav
         # return self.convert_to_int(g_wav)
