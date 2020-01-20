@@ -63,22 +63,11 @@ def main():
         parts = audio_file.split('/')
         parts[2] = 'test-clean'
         clean_audio_file = '/'.join(parts)
-        # clean_audio_array, samplerate = sf.read(clean_audio_file, dtype='int16')
-        # noisy_audio_array, samplerate = sf.read(audio_file, dtype='int16')
+
         clean_audio_array, samplerate = sf.read(clean_audio_file)
         noisy_audio_array, samplerate = sf.read(audio_file)
 
         transcript_text = get_transcript(audio_file)
-
-        # if args.noise == '':
-        #     noisy_audio_array = clean_audio_array
-        # elif args.noise.__contains__('shift'):
-        #     num_slices = int(args.noise.split('.')[1])
-        #     noisy_audio_array = add_shift_noise(
-        #         clean_audio_array, args.snr, num_slices)
-        # else:
-        #     noisy_audio_array = add_noise_from_source(
-        #         clean_audio_array, args.noise, args.snr)
 
         if args.enhancement == '':
             audio_array = noisy_audio_array
