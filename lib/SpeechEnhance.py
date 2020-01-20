@@ -10,8 +10,6 @@ from .segan_pytorch.segan.datasets import normalize_wave_minmax
 from .segan_pytorch.segan.datasets import pre_emphasize
 from .Se_Vcae import SeVcae
 
-# from .DeepXiNet import DeepXiNet
-
 
 class ArgParser(object):
 
@@ -41,13 +39,7 @@ class SpeechEnhance:
         return float_audio_signal 
 
     def wiener(self, audio_signal):
-        # print('pre audio signal', audio_signal)
-        # float_audio_signal = (audio_signal / 32767).astype(np.float64)
-        # enhanced_signal = wiener(float_audio_signal)
         enhanced_signal = wiener(audio_signal)
-
-        # enhanced_signal = self.convert_to_int(enhanced_signal)
-        # enhanced_signal = self.convert_to_int(enhanced_signal)
 
         return enhanced_signal
 
@@ -60,15 +52,8 @@ class SpeechEnhance:
         g_wav, g_c = self.segan.generate(pwav)
 
         return g_wav
-        # return self.convert_to_int(g_wav)
     
     def sevcae(self, audio_signal):
-        float_audio_signal = self.convert_to_float(audio_signal)
 
-        enhanced_signal = self.se_vcae.enhance(float_audio_signal)
-        return self.convert_to_int(enhanced_signal)
-
-    # def deepxi_enhance(self, audio_signal):
-    #     with tf.Session() as sess:
-    #         self.deepxi.saver.restore(sess, 'lib/deepxi/model/3e/epoch-173')
-    #         return
+        enhanced_signal = self.se_vcae.enhance(audio_signal)
+        return enhanced_signal
