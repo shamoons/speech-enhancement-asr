@@ -39,13 +39,19 @@ def main():
     parser.add_argument('--save', default='0',
                         help='Save current file')
 
+    parser.add_argument('--subset', default='',
+                        help='Specify a subset')
+
     args = parser.parse_args()
     noisy_path = 'data/LibriSpeech/'
 
-    if args.noise == '' and args.enhancement == '':
+    if args.noise == '' and args.enhancement == '' and args.subset == '':
         output_file_name = 'evaluate-clean'
         noisy_path += 'test-clean'
-    if args.noise != '':
+    if args.subset != '':
+        output_file_name = args.subset.replace('test', 'evaluate')
+        noisy_path += args.subset
+    elif args.noise != '':
         output_file_name = 'evaluate-' + args.noise + '-SNR' + args.snr
         noisy_path += 'test-noise-' + args.noise + '-' + args.snr
     if args.enhancement != '':
@@ -54,6 +60,8 @@ def main():
     output_file_name = output_file_name + '.csv'
 
     print('Filename: ', output_file_name)
+
+    print('noisy path', noisy_path)
 
     audio_files = sample_files(args.iterations, path=noisy_path)
     speech_enhance = SpeechEnhance()
@@ -99,7 +107,7 @@ def main():
         calc_pesq = None
         calc_stoi = None
 
-        if args.noise != '':
+        if args.noise != '' or args.subset != '':
             calc_pesq = pesq(samplerate, clean_audio_array, audio_array, 'wb')
             calc_stoi = stoi(clean_audio_array, audio_array, samplerate)
 
@@ -122,11 +130,6 @@ def main():
 
     print(output_df)
     print(output_file_name)
-
-    # print('T', transcript_text)
-    # print('P', predicted_text)
-    # print('WD', word_distance)
-    # print('\n')
 
 
 if __name__ == '__main__':
