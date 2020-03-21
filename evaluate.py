@@ -66,7 +66,7 @@ def main():
     audio_files = sample_files(args.iterations, path=noisy_path)
     speech_enhance = SpeechEnhance()
     for idx, audio_file in enumerate(audio_files):
-        print('Doing Iteration {idx}: '.format(audio_file))
+        print('Doing Iteration {}: '.format(audio_file))
 
         parts = audio_file.split('/')
         parts[2] = 'test-clean'
@@ -98,6 +98,10 @@ def main():
 
                 if args.enhancement != '':
                     sf.write('output/' + file_path + '.' + args.noise + '.' + args.snr + '.' + args.enhancement + '.wav', audio_array, samplerate)
+
+            if args.subset != '':
+                sf.write('output/' + file_path + '.' + args.subset + '.' + args.enhancement + '.wav', audio_array, samplerate)
+
 
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
