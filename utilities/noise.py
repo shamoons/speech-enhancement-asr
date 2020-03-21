@@ -74,14 +74,13 @@ def subtractive_noise(audio_array, samplerate, ms_to_cut, num_cuts = 1):
 
     # ms_to_cut = 2000
     # 32000 = 16000 / (1000 / ms_to_cut)
-    buffer = 100
+    # buffer = 100
     num_frames = int(samplerate / (1000 / ms_to_cut))
     if num_frames >= len(audio_array):
-        start_frame = 0
-        end_frame = len(audio_array) - 1
+        return []
     else:
         print('\tlen', len(audio_array), 'num_frames', num_frames)
-        start_frame = max(random.randint(buffer, len(audio_array) - num_frames - buffer), 0)
+        start_frame = max(random.randint(0, len(audio_array) - num_frames), 0)
         end_frame = min(start_frame + num_frames, len(audio_array))
         print('\tstart_frame', start_frame, 'end_frame', end_frame)
     incomplete_audio_array = audio_array

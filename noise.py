@@ -7,15 +7,19 @@ from soundfile import SoundFile
 from utilities.noise import add_noise_from_source, add_shift_noise, subtractive_noise
 
 def get_noisy_filepath(clean_filepath, noise, target_snr):
-    if '/dev-' in clean_filepath:
+    if '/dev' in clean_filepath:
         source_noise_path = 'dev-noise-' + noise + '-' + str(target_snr)
         path_name, filename = os.path.split(clean_filepath)
         noisy_path = path_name.replace('dev-clean', source_noise_path)
-    elif '/train-' in clean_filepath:
-        source_noise_path = 'train-noise-' + noise + '-' + str(target_snr)
+    elif '/train' in clean_filepath:
+        source_noise_path = 'train-noise' + noise + '-' + str(target_snr)
         path_name, filename = os.path.split(clean_filepath)
-        noisy_path = path_name.replace('train-clean', source_noise_path)
-    elif '/test-' in clean_filepath:
+        noisy_path = path_name.replace('train', source_noise_path)
+    elif '/val' in clean_filepath:
+        source_noise_path = 'val-noise' + noise + '-' + str(target_snr)
+        path_name, filename = os.path.split(clean_filepath)
+        noisy_path = path_name.replace('val', source_noise_path)
+    elif '/test' in clean_filepath:
         source_noise_path = 'test-noise-' + noise + '-' + str(target_snr)
         path_name, filename = os.path.split(clean_filepath)
         noisy_path = path_name.replace('test-clean', source_noise_path)
@@ -54,7 +58,7 @@ def main():
 
     clean_path = args.clean_path
 
-    for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
+    for filepath in glob.iglob(clean_path + '**/*.wav', recursive=True):
         print('\nProcessing: ', filepath)
 
         sound_file = SoundFile(filepath)
@@ -81,7 +85,10 @@ def main():
         elif args.noise_type == 'subtractive':
             ms_to_cut = int(args.ms_to_cut)
             incomplete_audio_array = subtractive_noise(clean_audio_array, sample_rate, ms_to_cut, 1)
-            noisy_file = save_noisy_signal(filepath, 'subtractive', str(ms_to_cut) + 'ms-1', incomplete_audio_array, sample_rate)
-            print('noisy_file', noisy_file)
+            if len(incomplete_audio_array) > 0:
+                noisy_file = save_noisy_signal(filepath, 'subtractive', str(ms_to_cut) + 'ms-1', incomplete_audio_array, sample_rate)
+                print('noisy_file', noisy_file)
+            else:
+                print('Too short Skipping.')
 if __name__ == '__main__':
     main()
