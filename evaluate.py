@@ -66,7 +66,7 @@ def main():
     audio_files = sample_files(args.iterations, path=noisy_path)
     speech_enhance = SpeechEnhance()
     for idx, audio_file in enumerate(audio_files):
-        print(f'Doing Iteration {idx}: ', audio_file)
+        print('Doing Iteration {idx}: '.format(audio_file))
 
         parts = audio_file.split('/')
         parts[2] = 'test-clean'

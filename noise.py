@@ -58,7 +58,7 @@ def main():
 
     clean_path = args.clean_path
 
-    for filepath in glob.iglob(clean_path + '**/*.wav', recursive=True):
+    for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
         print('\nProcessing: ', filepath)
 
         sound_file = SoundFile(filepath)
