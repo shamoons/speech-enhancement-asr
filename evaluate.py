@@ -100,7 +100,11 @@ def main():
                     sf.write('output/' + file_path + '.' + args.noise + '.' + args.snr + '.' + args.enhancement + '.wav', audio_array, samplerate)
 
             if args.subset != '':
-                sf.write('output/' + file_path + '.' + args.subset + '.' + args.enhancement + '.wav', audio_array, samplerate)
+                sf.write('output/' + file_path + '.' + args.subset + '.wav', audio_array, samplerate)
+
+                if args.enhancement != '':
+                    sf.write('output/' + file_path + '.' + args.subset + '.' + args.enhancement + '.wav', audio_array, samplerate)
+
 
 
         asr_result = speech_recognizer.deepspeech(audio_array)
