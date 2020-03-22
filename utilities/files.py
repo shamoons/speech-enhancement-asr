@@ -1,14 +1,18 @@
 import os
 import glob
 import pydash
+import random
 
 def sample_files(num, path='data/LibriSpeech/test-clean'):
+    random.seed(0)
     """Returns an array of random file names from a directory
     """
     audio_files = []
     num = int(num)
     files = list(glob.iglob(path + '/**/*.flac', recursive=True))
     audio_files = pydash.sample_size(files, num)
+    print(audio_files[0:5])
+    quit()
     
     return audio_files
 
