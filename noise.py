@@ -54,6 +54,8 @@ def main():
 
     parser.add_argument('--ms_to_cut', default='10', help='Milliseconds to cut for subtractive noise')
 
+    parser.add_argument('--save_mask', action='store_true', help='Whether or not to store a mask of missing values')
+
     args = parser.parse_args()
 
     clean_path = args.clean_path

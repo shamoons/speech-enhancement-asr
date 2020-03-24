@@ -11,8 +11,6 @@ def sample_files(num, path='data/LibriSpeech/test-clean'):
     num = int(num)
     files = list(glob.iglob(path + '/**/*.flac', recursive=True))
     audio_files = pydash.sample_size(files, num)
-    print(audio_files[0:5])
-    quit()
     
     return audio_files
 
