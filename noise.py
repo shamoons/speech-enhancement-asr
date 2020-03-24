@@ -1,9 +1,11 @@
-from wcmatch import glob
 import os
 import argparse
+import soundfile as sf
 import numpy as np
 from os import path
-import soundfile as sf
+from wcmatch import glob
+from wcmatch import wcmatch
+
 from soundfile import SoundFile
 from utilities.noise import add_noise_from_source, add_shift_noise, subtractive_noise
 
@@ -61,7 +63,10 @@ def main():
 
     clean_path = args.clean_path
 
-    for filepath in glob.iglob(clean_path + '**/*.{flac,wav}', recursive=True):
+    clean_audio_path = os.path.join(clean_path, '**/*.flac')
+
+    for filepath in glob.iglob('**/**/*.flac', root_dir=clean_path, flags=wcmatch.RECURSIVE):
+        filepath = os.path.join(clean_path, filepath)
         print('\nProcessing: ', filepath)
 
         sound_file = SoundFile(filepath)
@@ -95,7 +100,7 @@ def main():
                 if args.save_mask:
                     cut_mask = np.zeros(len(clean_audio_array))
                     cut_mask[start_frame:end_frame] = 1
-                    mask_filepath = os.path.splitext(filepath)[0] +'-mask.npy'
+                    mask_filepath = os.path.splitext(noisy_file)[0] +'-mask.npy'
                     print('mask_filepath', mask_filepath)
                     np.savetxt(mask_filepath, cut_mask, fmt='%i')
 
