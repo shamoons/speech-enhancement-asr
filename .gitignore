@@ -8,3 +8,4 @@ test-*.csv
 evaluate-*.csv
 output/
 *.out
+data/LibriSpeech/**

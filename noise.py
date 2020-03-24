@@ -1,6 +1,7 @@
-import glob
+from wcmatch import glob
 import os
 import argparse
+import numpy as np
 from os import path
 import soundfile as sf
 from soundfile import SoundFile
@@ -60,7 +61,7 @@ def main():
 
     clean_path = args.clean_path
 
-    for filepath in glob.iglob(clean_path + '**/*.flac', recursive=True):
+    for filepath in glob.iglob(clean_path + '**/*.{flac,wav}', recursive=True):
         print('\nProcessing: ', filepath)
 
         sound_file = SoundFile(filepath)
@@ -86,20 +87,19 @@ def main():
 
         elif args.noise_type == 'subtractive':
             ms_to_cut = int(args.ms_to_cut)
-            incomplete_audio_array = subtractive_noise(clean_audio_array, sample_rate, ms_to_cut, num_cuts=1)
+            clean_audio_array = clean_audio_array[0:10000]
+            incomplete_audio_array, start_frame, end_frame = subtractive_noise(clean_audio_array, sample_rate, ms_to_cut)
             if len(incomplete_audio_array) > 0:
-                print('filepath', filepath)
+                noisy_file = save_noisy_signal(filepath, 'subtractive', str(ms_to_cut) + 'ms-1', incomplete_audio_array, sample_rate)
 
-                # noisy_file = save_noisy_signal(filepath, 'subtractive', str(ms_to_cut) + 'ms-1', incomplete_audio_array, sample_rate)
-                print('args.save_mask', args.save_mask)
                 if args.save_mask:
-                    cut_mask = clean_audio_array - incomplete_audio_array
-                    print(clean_audio_array, clean_audio_array.mean())
-                    print(incomplete_audio_array, incomplete_audio_array.mean())
-                    print(cut_mask, cut_mask.mean())
+                    cut_mask = np.zeros(len(clean_audio_array))
+                    cut_mask[start_frame:end_frame] = 1
+                    mask_filepath = os.path.splitext(filepath)[0] +'-mask.npy'
+                    print('mask_filepath', mask_filepath)
+                    np.savetxt(mask_filepath, cut_mask, fmt='%i')
 
-                # print('noisy_file', noisy_file)
-                quit()
+                print('noisy_file', noisy_file)
             else:
                 print('Too short Skipping.')
 if __name__ == '__main__':

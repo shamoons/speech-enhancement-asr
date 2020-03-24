@@ -64,7 +64,7 @@ def add_shift_noise(audio_array, target_snr, num_slices=3, path='data/noise'):
 
     return add_noise(audio_array, source_noise, target_snr)
 
-def subtractive_noise(audio_array, samplerate, ms_to_cut, num_cuts = 1):
+def subtractive_noise(audio_array, samplerate, ms_to_cut):
 
     # ms_to_cut = 1000
     # 16000 = 16000 / 1
@@ -83,7 +83,8 @@ def subtractive_noise(audio_array, samplerate, ms_to_cut, num_cuts = 1):
         start_frame = max(random.randint(0, len(audio_array) - num_frames), 0)
         end_frame = min(start_frame + num_frames, len(audio_array))
         print('\tstart_frame', start_frame, 'end_frame', end_frame)
-    incomplete_audio_array = audio_array
+    incomplete_audio_array = np.array(audio_array, copy=True)
     incomplete_audio_array[start_frame:end_frame] = 0
     
-    return incomplete_audio_array
+    
+    return incomplete_audio_array, start_frame, end_frame
