@@ -86,10 +86,20 @@ def main():
 
         elif args.noise_type == 'subtractive':
             ms_to_cut = int(args.ms_to_cut)
-            incomplete_audio_array = subtractive_noise(clean_audio_array, sample_rate, ms_to_cut, 1)
+            incomplete_audio_array = subtractive_noise(clean_audio_array, sample_rate, ms_to_cut, num_cuts=1)
             if len(incomplete_audio_array) > 0:
-                noisy_file = save_noisy_signal(filepath, 'subtractive', str(ms_to_cut) + 'ms-1', incomplete_audio_array, sample_rate)
-                print('noisy_file', noisy_file)
+                print('filepath', filepath)
+
+                # noisy_file = save_noisy_signal(filepath, 'subtractive', str(ms_to_cut) + 'ms-1', incomplete_audio_array, sample_rate)
+                print('args.save_mask', args.save_mask)
+                if args.save_mask:
+                    cut_mask = clean_audio_array - incomplete_audio_array
+                    print(clean_audio_array, clean_audio_array.mean())
+                    print(incomplete_audio_array, incomplete_audio_array.mean())
+                    print(cut_mask, cut_mask.mean())
+
+                # print('noisy_file', noisy_file)
+                quit()
             else:
                 print('Too short Skipping.')
 if __name__ == '__main__':
