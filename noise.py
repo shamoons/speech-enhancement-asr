@@ -15,11 +15,11 @@ def get_noisy_filepath(clean_filepath, noise, target_snr):
         path_name, filename = os.path.split(clean_filepath)
         noisy_path = path_name.replace('dev-clean', source_noise_path)
     elif '/train' in clean_filepath:
-        source_noise_path = 'train-noise' + noise + '-' + str(target_snr)
+        source_noise_path = 'train-noise-' + noise + '-' + str(target_snr)
         path_name, filename = os.path.split(clean_filepath)
         noisy_path = path_name.replace('train', source_noise_path)
     elif '/val' in clean_filepath:
-        source_noise_path = 'val-noise' + noise + '-' + str(target_snr)
+        source_noise_path = 'val-noise-' + noise + '-' + str(target_snr)
         path_name, filename = os.path.split(clean_filepath)
         noisy_path = path_name.replace('val', source_noise_path)
     elif '/test' in clean_filepath:
@@ -92,7 +92,6 @@ def main():
 
         elif args.noise_type == 'subtractive':
             ms_to_cut = int(args.ms_to_cut)
-            clean_audio_array = clean_audio_array[0:10000]
             incomplete_audio_array, start_frame, end_frame = subtractive_noise(clean_audio_array, sample_rate, ms_to_cut)
             if len(incomplete_audio_array) > 0:
                 noisy_file = save_noisy_signal(filepath, 'subtractive', str(ms_to_cut) + 'ms-1', incomplete_audio_array, sample_rate)
