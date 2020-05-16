@@ -8,7 +8,7 @@ class SpeechRecognition:
         self.deepspeech_model = None
         self.initialize_deepspeech()
 
-    def initialize_deepspeech(self, model='data/models/deepspeech-0.6.0-models/output_graph.pbmm', lm='data/models/deepspeech-0.6.0-models/lm.binary', trie='/data/models/deepspeech-0.6.0-models/trie', beam_width=500):
+    def initialize_deepspeech(self, model='data/models/deepspeech-0.6.1-models/output_graph.pbmm', lm='data/models/deepspeech-0.6.1-models/lm.binary', trie='/data/models/deepspeech-0.6.1-models/trie', beam_width=500):
         self.deepspeech_model = deepspeech.Model(model, beam_width)
         self.deepspeech_model.enableDecoderWithLM(lm, trie, 0.75, 1.85)
 

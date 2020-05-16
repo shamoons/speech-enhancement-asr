@@ -39,13 +39,19 @@ def main():
     parser.add_argument('--save', default='0',
                         help='Save current file')
 
+    parser.add_argument('--subset', default='',
+                        help='Specify a subset')
+
     args = parser.parse_args()
     noisy_path = 'data/LibriSpeech/'
 
-    if args.noise == '' and args.enhancement == '':
+    if args.noise == '' and args.enhancement == '' and args.subset == '':
         output_file_name = 'evaluate-clean'
         noisy_path += 'test-clean'
-    if args.noise != '':
+    if args.subset != '':
+        output_file_name = args.subset.replace('test', 'evaluate')
+        noisy_path += args.subset
+    elif args.noise != '':
         output_file_name = 'evaluate-' + args.noise + '-SNR' + args.snr
         noisy_path += 'test-noise-' + args.noise + '-' + args.snr
     if args.enhancement != '':
@@ -55,10 +61,12 @@ def main():
 
     print('Filename: ', output_file_name)
 
+    print('noisy path', noisy_path)
+
     audio_files = sample_files(args.iterations, path=noisy_path)
     speech_enhance = SpeechEnhance()
     for idx, audio_file in enumerate(audio_files):
-        print(f'Doing Iteration {idx}: ', audio_file)
+        print('Doing Iteration {}: '.format(audio_file))
 
         parts = audio_file.split('/')
         parts[2] = 'test-clean'
@@ -91,6 +99,14 @@ def main():
                 if args.enhancement != '':
                     sf.write('output/' + file_path + '.' + args.noise + '.' + args.snr + '.' + args.enhancement + '.wav', audio_array, samplerate)
 
+            if args.subset != '':
+                sf.write('output/' + file_path + '.' + args.subset + '.wav', audio_array, samplerate)
+
+                if args.enhancement != '':
+                    sf.write('output/' + file_path + '.' + args.subset + '.' + args.enhancement + '.wav', audio_array, samplerate)
+
+
+
         asr_result = speech_recognizer.deepspeech(audio_array)
         predicted_text = ' '.join(asr_result).upper()
         word_distance = speech_recognizer.word_distance(
@@ -99,7 +115,7 @@ def main():
         calc_pesq = None
         calc_stoi = None
 
-        if args.noise != '':
+        if args.noise != '' or args.subset != '':
             calc_pesq = pesq(samplerate, clean_audio_array, audio_array, 'wb')
             calc_stoi = stoi(clean_audio_array, audio_array, samplerate)
 
@@ -122,11 +138,6 @@ def main():
 
     print(output_df)
     print(output_file_name)
-
-    # print('T', transcript_text)
-    # print('P', predicted_text)
-    # print('WD', word_distance)
-    # print('\n')
 
 
 if __name__ == '__main__':
