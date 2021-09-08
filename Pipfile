@@ -19,7 +19,7 @@ pydash = "*"
 sklearn = "*"
 torch = "==0.4.1"
 torchvision = "~=0.2.1"
-pillow = "~=6.2.2"
+pillow = "~=8.3.2"
 librosa = "~=0.6.1"
 ahoproc-tools = {git = "https://github.com/santi-pdp/ahoproc_tools",ref = "master"}
 tensorboardX = "~=1.4"
@@ -50,7 +50,7 @@ torchvision = "~=0.2.1"
 ahoproc-tools = {git = "https://github.com/santi-pdp/ahoproc_tools",ref = "master"}
 sklearn = "*"
 sevcae = {editable = true,git = "https://github.com/shamoons/Speech-Enhancement-with-Variance-Constrained-Autoencoders"}
-pillow = "~=6.2.2"
+pillow = "~=8.3.2"
 opt-einsum = "*"
 
 [requires]
